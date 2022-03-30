@@ -1,0 +1,8 @@
+# ------------------------------------------
+#     Sieve
+# ------------------------------------------
+SieveMaxCollision = -1
+SieveMaxListSize  = -1
+SieveMaxStackSize = -1
+SieveNumOfSendVectorsToPool = 3
+SieveNumOfReceiveVectorsFromPool = 3

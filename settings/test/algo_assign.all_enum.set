@@ -1,0 +1,13 @@
+# -------------------------------------------
+#     Logs
+# -------------------------------------------
+LogSolvingStatusFilePath  = "./logs/all_enum__"
+CheckpointFilePath        = "./logs/all_enum__"
+SolutionFilePath          = "./logs/all_enum__"
+
+# ------------------------------------------
+#     Base ( LC )
+# ------------------------------------------
+NumOfInitialDeepBkzSolvers = 0
+NumOfInitialEnumSolvers    = -1
+NumOfInitialSieveSolvers   = 0

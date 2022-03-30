@@ -1,0 +1,44 @@
+# -------------------------------------------
+#     Logging
+# -------------------------------------------
+Quiet = FALSE
+LogSolvingStatus = TRUE
+LogSolvingStatusFilePath  = "./logs/share0__"
+CheckpointFilePath        = "./logs/share0__"
+SolutionFilePath          = "./logs/share0__"
+StatisticsToStdout = FALSE
+OutputSimilarityOfBasis = TRUE
+IntervalTimeOfOutputSimilarityOfBasis = 60
+NumOfSamplingForSimilarityOfBasis = 100
+
+# ------------------------------------------
+#     Checkpoint
+# ------------------------------------------
+Checkpoint = TRUE
+CheckpointInterval = 600
+WriteSizeShareDataPool = 100000
+
+# ------------------------------------------
+#     Base ( Communication )
+# ------------------------------------------
+TimeLimit = 3000
+NoWaitNotificationId = FALSE
+NotificationInterval = 10
+IReceiveInterval     = 1
+CMapLapParamFilePath = "./settings/laptools.ug.param"
+
+# ------------------------------------------
+#     Base ( LC )
+# ------------------------------------------
+InstancePoolSize = 100
+DimensionOfSharedLattice = 0
+
+# ------------------------------------------
+#     DeepBkz
+# ------------------------------------------
+# ReductionType; 1 no-communication, 2 parallel 3 recursive
+DeepBkzReductionType = 2
+DeepBkzStartBlockSize = 30
+DeepBkzEndBlockSize = 30
+DeepBkzBlockSizeInterval = 5
+RandomizeRows = -1

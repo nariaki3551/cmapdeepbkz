@@ -1,0 +1,43 @@
+# -------------------------------------------
+#     Logging
+# -------------------------------------------
+Quiet = FALSE
+LogSolvingStatus = TRUE
+LogSolvingStatusFilePath  = "./logs/all_deepbkz.poolsize0__"
+CheckpointFilePath        = "./logs/all_deepbkz.poolsize0__"
+SolutionFilePath          = "./logs/all_deepbkz.poolsize0__"
+
+# ------------------------------------------
+#     Checkpoint
+# ------------------------------------------
+Checkpoint = TRUE
+CheckpointInterval = 600
+
+# ------------------------------------------
+#     Base ( Communication )
+# ------------------------------------------
+TimeLimit = 3600
+NotificationInterval = 60
+IReceiveInterval     = 1
+ShareVectorsInterval = 10
+CMapLapParamFilePath = "./settings/laptools.ug.param"
+
+# ------------------------------------------
+#     Base ( LC )
+# ------------------------------------------
+NumOfInitialDeepBkzSolvers = -1
+NumOfInitialEnumSolvers    = 0
+NumOfInitialSieveSolvers   = 0
+ShareDataPoolSize = 0
+
+# ------------------------------------------
+#     DeepBkz
+# ------------------------------------------
+# ReductionType; 1 no-communication, 2 parallel
+DeepBkzReductionType = 2
+DeepBkzStartBlockSize = 30
+DeepBkzEndBlockSize = 30
+DeepBkzBlockSizeInterval = 5
+RandomizeRows = -1
+DeepBkzNumOfSendVectorsToPool = 0
+DeepBkzNumOfReceiveVectorsFromPool = 0

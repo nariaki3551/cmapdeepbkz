@@ -1,0 +1,6 @@
+# ------------------------------------------
+#     Enum
+# ------------------------------------------
+EnumPruningParameter = 1e-10
+EnumSamplingDepth = 3
+EnumNumOfSendVectorsToPool = 2

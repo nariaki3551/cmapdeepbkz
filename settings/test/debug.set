@@ -1,0 +1,7 @@
+# ------------------------------------------
+#     Debug
+# ------------------------------------------
+TagTrace       = FALSE
+DeepBkzVerbose = 3
+EnumVerbose    = 3
+SieveVerbose   = 2

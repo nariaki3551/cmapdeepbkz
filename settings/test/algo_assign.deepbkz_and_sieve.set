@@ -1,0 +1,13 @@
+# -------------------------------------------
+#     Logs
+# -------------------------------------------
+LogSolvingStatusFilePath  = "./logs/deepbkz_and_sieve__"
+CheckpointFilePath        = "./logs/deepbkz_and_sieve__"
+SolutionFilePath          = "./logs/deepbkz_and_sieve__"
+
+# ------------------------------------------
+#     Base ( LC )
+# ------------------------------------------
+NumOfInitialDeepBkzSolvers = -1
+NumOfInitialEnumSolvers    = 0
+NumOfInitialSieveSolvers   = 2

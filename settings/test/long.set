@@ -1,0 +1,19 @@
+# ------------------------------------------
+#     Checkpoint
+# ------------------------------------------
+Checkpoint = TRUE
+CheckpointInterval = 30
+WriteSizeShareDataPool = 100000
+
+# ------------------------------------------
+#     Base ( Communication )
+# ------------------------------------------
+TimeLimit = 600
+NoWaitNotificationId = FALSE
+LCTermTimeUpdateNotificationInterval = 300
+LCUpperIdleRatio = 0.9
+LCLowerIdleRatio = 0.3
+NotificationInterval = 1
+IReceiveInterval     = 1
+ShareVectorsInterval = 1
+CMapLapParamFilePath = "./settings/laptools.ug.param"

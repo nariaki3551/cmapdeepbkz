@@ -1,0 +1,59 @@
+# -------------------------------------------
+#     Logging
+# -------------------------------------------
+Quiet = FALSE
+LogSolvingStatus = TRUE
+LogSolvingStatusFilePath  = "./logs/deepbkz143.enum0.sieve0__"
+CheckpointFilePath        = "./logs/deepbkz143.enum0.sieve0__"
+SolutionFilePath          = "./logs/deepbkz143.enum0.sieve0__"
+
+# ------------------------------------------
+#     Checkpoint
+# ------------------------------------------
+Checkpoint = TRUE
+CheckpointInterval = 600
+
+# ------------------------------------------
+#     Base ( Communication )
+# ------------------------------------------
+TimeLimit = 3600
+NotificationInterval = 60
+IReceiveInterval     = 1
+ShareVectorsInterval = 10
+CMapLapParamFilePath = "./settings/laptools.ug.param"
+
+# ------------------------------------------
+#     Base ( LC )
+# ------------------------------------------
+NumOfInitialDeepBkzSolvers = -1
+NumOfInitialEnumSolvers    = 0
+NumOfInitialSieveSolvers   = 0
+ShareDataPoolSize = 100000
+
+# ------------------------------------------
+#     DeepBkz
+# ------------------------------------------
+# ReductionType; 1 no-communication, 2 parallel
+DeepBkzReductionType = 2
+DeepBkzStartBlockSize = 30
+DeepBkzEndBlockSize = 30
+DeepBkzBlockSizeInterval = 5
+RandomizeRows = -1
+DeepBkzNumOfSendVectorsToPool = 10
+DeepBkzNumOfReceiveVectorsFromPool = 1
+
+# ------------------------------------------
+#     Enum
+# ------------------------------------------
+EnumPruningParameter = 1e-10
+EnumSamplingDepth = 3
+EnumNumOfSendVectorsToPool = 10
+
+# ------------------------------------------
+#     Sieve
+# ------------------------------------------
+SieveMaxCollision = -1
+SieveMaxListSize  = -1
+SieveMaxStackSize = -1
+SieveNumOfSendVectorsToPool = 5
+SieveNumOfReceiveVectorsFromPool = 100

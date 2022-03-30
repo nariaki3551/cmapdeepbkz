@@ -1,0 +1,6 @@
+AutoAdjustmentNotificationInterval = TRUE
+LCTermTimeUpdateNotificationInterval = 3
+
+NotificationInterval = 0.1
+IReceiveInterval     = 0.1
+ShareVectorsInterval = 0.1

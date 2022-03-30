@@ -1,0 +1,89 @@
+# -------------------------------------------
+#     Logging
+# -------------------------------------------
+Quiet = FALSE
+LogSolvingStatus = TRUE
+LogSolvingStatusFilePath  = "./logs/"
+CheckpointFilePath        = "./logs/"
+SolutionFilePath          = "./logs/"
+StatisticsToStdout = FALSE
+OutputSimilarityOfBasis = TRUE
+IntervalTimeOfOutputSimilarityOfBasis = 20
+NumOfSamplingForSimilarityOfBasis = 100
+IntervalTimeOfLogShareDataPool = 60
+LogShareDataPoolAll = FALSE
+LogShareDataPoolStat = TRUE
+
+# ------------------------------------------
+#     Debug
+# ------------------------------------------
+TagTrace       = FALSE
+DeepBkzVerbose = 0
+EnumVerbose    = 0
+SieveVerbose   = 0
+
+# ------------------------------------------
+#     Checkpoint
+# ------------------------------------------
+Checkpoint = TRUE
+CheckpointInterval = 120
+WriteSizeShareDataPool = 100000
+
+# ------------------------------------------
+#     Base ( Communication )
+# ------------------------------------------
+TimeLimit = 3600
+NoWaitNotificationId = FALSE
+LCTermTimeUpdateNotificationInterval = 300
+LCUpperIdleRatio = 0.9
+LCLowerIdleRatio = 0.3
+NotificationInterval = 1
+IReceiveInterval     = 1
+ShareVectorsInterval = 1
+CMapLapParamFilePath = "./settings/laptools.ug.param"
+
+# ------------------------------------------
+#     Base ( LC )
+# ------------------------------------------
+NumOfInitialDeepBkzSolvers = -1
+NumOfInitialEnumSolvers    = 0
+NumOfInitialSieveSolvers   = 0
+ShareDataPoolSize = 1000000
+InstancePoolSize = 100
+DimensionOfSharedLattice = 16
+ShareIncumbentVector = TRUE
+
+# ------------------------------------------
+#     Local Solver
+# ------------------------------------------
+NumOfLocalSolversInLC = 0
+LocalTaskNVectorLowerBound = 2
+
+# ------------------------------------------
+#     DeepBkz
+# ------------------------------------------
+# ReductionType; 1 no-communication, 2 parallel 3 recursive
+DeepBkzReductionType = 2
+DeepBkzStartBlockSize = 30
+DeepBkzEndBlockSize = 30
+DeepBkzBlockSizeInterval = 5
+RandomizeRows = -1
+DeepBkzNumOfSendVectorsToPool = 5
+DeepBkzNumOfReceiveVectorsFromPool = 1
+
+# ------------------------------------------
+#     Enum
+# ------------------------------------------
+EnumPruningParameter = 1e-10
+EnumSamplingDepth = 3
+EnumNumOfSendVectorsToPool = 1
+
+
+# ------------------------------------------
+#     Sieve
+# ------------------------------------------
+SieveMaxCollision = -1
+SieveMaxListSize  = -1
+SieveMaxStackSize = -1
+SieveNumOfSendVectorsToPool = 0
+SieveNumOfReceiveVectorsFromPool = 100

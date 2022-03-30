@@ -1,0 +1,1 @@
+#define UG_GITHASH ""

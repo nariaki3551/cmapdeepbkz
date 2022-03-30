@@ -1,0 +1,3 @@
+LogShareDataPoolAll = TRUE
+LogShareDataPoolStat = TRUE
+IntervalTimeOfLogShareDataPool = 30
