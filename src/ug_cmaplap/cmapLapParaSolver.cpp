@@ -1034,6 +1034,8 @@ CMapLapParaSolver::processTagCMapLapPackedVector(
       case Sieve:
          nVectorsReceivedSieve += receivedPackedVector->getNVectors();
          break;
+      case Undefined:
+         break;
       default:
          THROW_LOGICAL_ERROR2("CMapLapParaSolver::processTagCMapLapPackedVector: Invalid solver type = ",static_cast<int>(getSolverType()));
    }
@@ -2153,6 +2155,8 @@ CMapLapParaSolver::sendSolution(
             break;
          case Sieve:
             nVectorsSentSieve++;
+            break;
+         case Undefined:
             break;
          default:
             THROW_LOGICAL_ERROR2("CMapLapParaSolver::sendSolution: Invalid solver type = ",static_cast<int>(getSolverType()));
