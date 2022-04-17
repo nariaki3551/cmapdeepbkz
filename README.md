@@ -101,7 +101,7 @@ The binaries will be created in `DeepBKZ/bin`.
 ```bash
 mkdir build
 cd build
-cmake .. (same options)
+cmake .. (some options)
 make
 ```
 
