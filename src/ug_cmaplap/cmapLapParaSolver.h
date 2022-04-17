@@ -576,8 +576,14 @@ public:
    virtual SolverType getSolverType(
          )
    {
-      assert( currentTask );
-      return (dynamic_cast<CMapLapParaTask *>(currentTask))->getSolverType();
+      if( currentTask )
+      {
+         return (dynamic_cast<CMapLapParaTask *>(currentTask))->getSolverType();
+      }
+      else
+      {
+         return Undefined;
+      }
    }
 
    virtual void writeCurrentTaskProblem(const std::string& filename){ throw "** writeCurrentNodeProblem is called **"; };
