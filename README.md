@@ -27,6 +27,7 @@ In addition, some programs independent of the UG framework are distributed under
 - [Compiling](#compiling)
   - [Created binaries](#created-binaries)
   - [CMake Options](#cmake-options)
+  - [Examples](#examples)
   - [Check](#check)
 - [Usage](#usage)
   - [CMAP-TEST](#cmap-test)
@@ -92,6 +93,8 @@ cmake .. [-DCMAKE_INSTALL_PREFIX=PREFIX]
 make install
 ```
 
+In the case that you install these libraries in your local, it is recommended to create a cmaplap/usr directory and specify cmaplap/usr in the PREFIX above.
+
 <br>
 
 # Compiling
@@ -124,6 +127,17 @@ When you want to compile a parallel version, set `CMAKE_CXX_COMPILER` to mpi com
 
 **Note**
 If you do not use mpi compiler (e.g. -DCMAKE_CXX_COMPILER=gcc), the build will fail under `SHARED_MEMORY_ONLY` option is OFF, so you have to use the option `-DSHARED_MEMORY_ONLY=ON`.
+
+
+## Examples
+
+### compile only shared memory version
+  - cmake .. -DSHARED_MEMORY_ONLY=ON
+### compile both shared and distributed memory version
+  - cmake .. -DCMAKE_CXX_COMPILER=mpicxx
+### compile with debug mode (add -g, and remove -O3)
+  - cmake .. -DCMAKE_CXX_COMPILER=mpicxx -DCMAKE_BUILD_TYPE=Debug
+
 
 ## Check
 
