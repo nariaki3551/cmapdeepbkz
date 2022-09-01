@@ -340,6 +340,10 @@ def cyan_str(s):
     return "\033[36m" + s + "\033[0m"
 
 
+def check_args(args):
+    assert args.number_of_parallels >= 4, f"-np or --number_of_parallels must be greater than 3, but got {args.number_of_parallels}"
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -380,4 +384,5 @@ if __name__ == "__main__":
         help="display standard output for each test",
     )
     args = parser.parse_args()
+    check_args(args)
     main(args)
