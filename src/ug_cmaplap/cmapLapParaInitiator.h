@@ -59,6 +59,7 @@ enum FinalSolverState {
    InitialTasksGenerated,
    Aborted,
    HardTimeLimitIsReached,
+   LowerBoundIsReached,
    ComputingWasInterrupted,
    ProblemWasSolved,
    RequestedSubProblemsWereSolved

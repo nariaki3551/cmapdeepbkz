@@ -215,6 +215,8 @@ class CMapLapParaLoadCoordinator : public UG::ParaLoadCoordinator
 
    bool               assigningParaTask;                  ///< true if lc is assigning paraTask else false
    std::vector<bool>  hasSentBasisRequest;                ///< manager of SendBasisRequest
+   bool               lowerBoundIsReached;                ///< true if LC has the solution that is better than globalLowerBoundOfSquaredNorm
+   double             globalLowerBoundOfSquaredNorm;      ///< global lattice vector's lowerbound of squared norm
 
 
    ///

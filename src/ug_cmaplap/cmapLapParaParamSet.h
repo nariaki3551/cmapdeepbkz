@@ -136,26 +136,27 @@ static const int CMapLapParaParamsLongintN            = CMapLapParaParamsLongint
 ///
 static const int CMapLapParaParamsRealFirst           = CMapLapParaParamsLongintLast + 1;
 //-------------------------------------------------------------------------
-static const int LowerBound                           = CMapLapParaParamsRealFirst   + 0;
-static const int DeepBkzTaskMaxTimeLimit              = CMapLapParaParamsRealFirst   + 1;
-static const int EnumTaskMaxTimeLimit                 = CMapLapParaParamsRealFirst   + 2;
-static const int SieveTaskMaxTimeLimit                = CMapLapParaParamsRealFirst   + 3;
-static const int EnumTotalProb                        = CMapLapParaParamsRealFirst   + 4;
-static const int EnumTraversedNodesPerSeconds         = CMapLapParaParamsRealFirst   + 5;
-static const int EnumPruningParameter                 = CMapLapParaParamsRealFirst   + 6;
-static const int RandomizeScale                       = CMapLapParaParamsRealFirst   + 7;
-static const int EnumStartTime                        = CMapLapParaParamsRealFirst   + 8;
-static const int SieveStartTime                       = CMapLapParaParamsRealFirst   + 9;
-static const int IntervalTimeOfAssignmentTableOutput  = CMapLapParaParamsRealFirst   + 10;
-static const int IntervalTimeOfLogShareDataPool       = CMapLapParaParamsRealFirst   + 11;
-static const int IReceiveInterval                     = CMapLapParaParamsRealFirst   + 12;
-static const int ShareVectorsInterval                 = CMapLapParaParamsRealFirst   + 13;
-static const int IntervalTimeOfOutputSimilarityOfBasis = CMapLapParaParamsRealFirst  + 14;
-static const int LCTermTimeUpdateNotificationInterval = CMapLapParaParamsRealFirst   + 15;
-static const int LCUpperIdleRatio                     = CMapLapParaParamsRealFirst   + 16;
-static const int LCLowerIdleRatio                     = CMapLapParaParamsRealFirst   + 17;
+static const int LowerBoundOfNorm                     = CMapLapParaParamsRealFirst   + 0;
+static const int LowerBoundOfApproxFactor             = CMapLapParaParamsRealFirst   + 1;
+static const int DeepBkzTaskMaxTimeLimit              = CMapLapParaParamsRealFirst   + 2;
+static const int EnumTaskMaxTimeLimit                 = CMapLapParaParamsRealFirst   + 3;
+static const int SieveTaskMaxTimeLimit                = CMapLapParaParamsRealFirst   + 4;
+static const int EnumTotalProb                        = CMapLapParaParamsRealFirst   + 5;
+static const int EnumTraversedNodesPerSeconds         = CMapLapParaParamsRealFirst   + 6;
+static const int EnumPruningParameter                 = CMapLapParaParamsRealFirst   + 7;
+static const int RandomizeScale                       = CMapLapParaParamsRealFirst   + 8;
+static const int EnumStartTime                        = CMapLapParaParamsRealFirst   + 9;
+static const int SieveStartTime                       = CMapLapParaParamsRealFirst   + 10;
+static const int IntervalTimeOfAssignmentTableOutput  = CMapLapParaParamsRealFirst   + 11;
+static const int IntervalTimeOfLogShareDataPool       = CMapLapParaParamsRealFirst   + 12;
+static const int IReceiveInterval                     = CMapLapParaParamsRealFirst   + 13;
+static const int ShareVectorsInterval                 = CMapLapParaParamsRealFirst   + 14;
+static const int IntervalTimeOfOutputSimilarityOfBasis = CMapLapParaParamsRealFirst  + 15;
+static const int LCTermTimeUpdateNotificationInterval = CMapLapParaParamsRealFirst   + 16;
+static const int LCUpperIdleRatio                     = CMapLapParaParamsRealFirst   + 17;
+static const int LCLowerIdleRatio                     = CMapLapParaParamsRealFirst   + 18;
 //-------------------------------------------------------------------------
-static const int CMapLapParaParamsRealLast            = CMapLapParaParamsRealFirst   + 17;
+static const int CMapLapParaParamsRealLast            = CMapLapParaParamsRealFirst   + 18;
 static const int CMapLapParaParamsRealN               = CMapLapParaParamsRealLast - CMapLapParaParamsRealFirst + 1;
 ///
 /// Char parameters

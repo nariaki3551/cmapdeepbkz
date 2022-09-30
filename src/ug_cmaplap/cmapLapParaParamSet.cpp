@@ -351,10 +351,16 @@ CMapLapParaParamSet::CMapLapParaParamSet(
    ///
    /// real params
    ///
-   paraParams[LowerBound] = new UG::ParaParamReal(
-         "LowerBound",
-         "# Solver stops when it finds the vector whose norm shorter than LowerBound [Default value: DBL_MAX][0, DBL_MAX]",
-         DBL_MAX,
+   paraParams[LowerBoundOfNorm] = new UG::ParaParamReal(
+         "LowerBoundOfNorm",
+         "# Solver terminates when it finds the vector whose norm shorter than LowerBoundOfNorm [Default value: -1][0, DBL_MAX]",
+         -1,
+         0.0,
+         DBL_MAX);
+   paraParams[LowerBoundOfApproxFactor] = new UG::ParaParamReal(
+         "LowerBoundOfApproxFactor",
+         "# Solver terminates when it finds the vector whose approx factor shorter than LowerBoundOfApproxFactor [Default value: -1][0, DBL_MAX]",
+         -1,
          0.0,
          DBL_MAX);
    paraParams[DeepBkzTaskMaxTimeLimit] = new UG::ParaParamReal(

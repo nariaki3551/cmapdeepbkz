@@ -72,29 +72,34 @@ CMapDeepBkzParaSolver::runDeepBkz(
 {
    CMapLapParaTask *cmapLapParaTask = dynamic_cast<CMapLapParaTask *>(currentTask);
 
+   // create Lattice object
    LatticeBasis<int> basis{*cmapLapParaTask->getBasis()};
    auto L = std::make_shared<LapTools::Lattice<int, double>>(basis);
-   Config config(paraParams->getStringParamValue(CMapLapParamFilePath));
 
+   Config config(paraParams->getStringParamValue(CMapLapParamFilePath));
    int verbose = paraParams->getIntParamValue(DeepBkzVerbose);
    config.Quiet = ( verbose == 0 );
    L->setConfig(config);
 
-   // randomize
+   // randomize basis
    int begin = 0, end = L->m - 1;
    int randomizeSize = cmapLapParaTask->getU();
    if( randomizeSize >= 0 ){ begin = end - randomizeSize; }
    if( begin < 0 ){ begin = 0; }
    L->randomize(cmapLapParaTask->getSeed(), begin, end);
 
-   // reduction
+   // create DeepBkz object
    bool mergeBasisFromLC = ( paraParams->getIntParamValue(DimensionOfSharedLattice) > 0 );
    previousNotificationTime = paraTimer->getElapsedTime() - notificationInterval;
    CmapDeepBkz<int, double, double> reductionObj{
       L, this, getRank(), getThreadId(), verbose, mergeBasisFromLC};
    reductionObj.setNSendVectors(paraParams->getIntParamValue(DeepBkzNumOfSendVectorsToPool));
+
+   // reduction (LLL, DeepLLL)
    reductionObj.lll();
    reductionObj.deeplll();
+
+   // reduction (DeepBKZ)
    int startBlocksize      = paraParams->getIntParamValue(DeepBkzStartBlockSize);
    int endBlocksize        = paraParams->getIntParamValue(DeepBkzEndBlockSize);
    int intervalBlocksize   = paraParams->getIntParamValue(DeepBkzBlockSizeInterval);

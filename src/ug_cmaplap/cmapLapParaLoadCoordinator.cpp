@@ -103,7 +103,9 @@ CMapLapParaLoadCoordinator::CMapLapParaLoadCoordinator(
    nThreadsPerRank(inNThreadsInSolver),
    nStatus(0),
    previousAssingmentTableOutputTime(0.0),
-   assigningParaTask(false)
+   assigningParaTask(false),
+   lowerBoundIsReached(false),
+   globalLowerBoundOfSquaredNorm(-1.0)
 {
 
    CMapLapParaParamSet *cmapLapParaParams = dynamic_cast<CMapLapParaParamSet *>(paraParams);
@@ -114,6 +116,32 @@ CMapLapParaLoadCoordinator::CMapLapParaLoadCoordinator(
 
    currentSeed = cmapLapParaInitiator->getRandomizeSeed();
    lcts.setProcessTimesOfMessageHandler(N_CMAP_LAP_TAGS);
+
+   ///
+   /// Setting of globalLowerBoundOfSquaredNorm
+   ///
+   double lowerBoundOfNorm = paraParams->getRealParamValue(LowerBoundOfNorm);
+   if( lowerBoundOfNorm > 0.0 )
+   {
+      globalLowerBoundOfSquaredNorm = lowerBoundOfNorm * lowerBoundOfNorm;
+   }
+   double lowerBoundOfApproxFactor = paraParams->getRealParamValue(LowerBoundOfApproxFactor);
+   if( lowerBoundOfApproxFactor > 0.0 )
+   {
+      lowerBoundOfNorm = getCmapLapParaInitiator()->getLattice().GH * lowerBoundOfApproxFactor;
+      if( globalLowerBoundOfSquaredNorm < 0.0 )
+      {
+         globalLowerBoundOfSquaredNorm = lowerBoundOfNorm * lowerBoundOfNorm;
+      }
+      else
+      {
+         globalLowerBoundOfSquaredNorm = std::min(
+               globalLowerBoundOfSquaredNorm,
+               lowerBoundOfNorm * lowerBoundOfNorm
+               );
+      }
+      std::cout << "*** set globalLowerBoundOfSquaredNorm = " << globalLowerBoundOfSquaredNorm << " ***" << std::endl;
+   }
 
    ///
    /// Setting of Message Handler
@@ -1242,7 +1270,7 @@ CMapLapParaLoadCoordinator::shouldCreateAndAssignTask(
    {
       hasSetInitialDeepBkzSolvers = true;
    }
-   if( hardTimeLimitIsReached )
+   if( hardTimeLimitIsReached || lowerBoundIsReached )
    {
       return false;
    }
@@ -1296,7 +1324,7 @@ bool
 CMapLapParaLoadCoordinator::shouldBreakRun(
       )
 {
-   if( !isAssigningParaTask() && !hardTimeLimitIsReached )
+   if( !isAssigningParaTask() && (!hardTimeLimitIsReached && !lowerBoundIsReached) )
       return false;
    else if( paraSolverPool->getNumActiveSolvers() > 0 )
       return false;
@@ -1627,7 +1655,7 @@ CMapLapParaLoadCoordinator::waitForAnyMessageFromAnyWhere(
    }
 #ifdef _COMM_MPI_WORLD
    startTime = paraTimer->getElapsedTime();
-   if( !hardTimeLimitIsReached )
+   if( !hardTimeLimitIsReached && !lowerBoundIsReached )
    {
       cmapLapParaComm->testAllIsends();
    }
@@ -1717,12 +1745,29 @@ CMapLapParaLoadCoordinator::run(
       // Wait message from solvers
       waitForAnyMessageFromAnyWhere();
 
-      // Process when time limit is reached
+      // Check to see if the time limit has been reached
       if( !hardTimeLimitIsReached &&
+            !lowerBoundIsReached &&
             paraParams->getRealParamValue(UG::TimeLimit) > 0 &&
             paraTimer->getElapsedTime() > paraParams->getRealParamValue(UG::TimeLimit) )
       {
          hardTimeLimitIsReached = true;
+         interruptIsRequested = true;
+         cmapLapParaSolverPool->interruptAllSolvers(lcLocalComm, TagTimeLimitRequest);
+         if( paraLocalSolverPool ) paraLocalSolverPool->interruptAllSolvers(lcLocalComm, TagTimeLimitRequest);
+#ifdef UG_WITH_ZLIB
+         updateCheckpointFiles();
+#endif
+      }
+
+      // Check to see if the lower bound has been reached
+      if( !hardTimeLimitIsReached &&
+            !lowerBoundIsReached &&
+            globalLowerBoundOfSquaredNorm > 0 &&
+            getCmapLapParaInitiator()->getGlobalBestIncumbentSolution()->getObjectiveFunctionValue()
+               < globalLowerBoundOfSquaredNorm )
+      {
+         lowerBoundIsReached = true;
          interruptIsRequested = true;
          cmapLapParaSolverPool->interruptAllSolvers(lcLocalComm, TagTimeLimitRequest);
          if( paraLocalSolverPool ) paraLocalSolverPool->interruptAllSolvers(lcLocalComm, TagTimeLimitRequest);
@@ -1736,6 +1781,7 @@ CMapLapParaLoadCoordinator::run(
       {
          waitForAnyMessageFromLocal();
          if( !hardTimeLimitIsReached &&
+               !lowerBoundIsReached &&
                !paraLocalTaskPool->empty() &&
                paraLocalSolverPool->getNumInactiveSolvers() > 0 )
          {
@@ -1839,6 +1885,10 @@ CMapLapParaLoadCoordinator::run(
    if( hardTimeLimitIsReached )
    {
       cmapLapParaInitiator->setFinalSolverStatus(ParaCMapLAP::HardTimeLimitIsReached);
+   }
+   if( lowerBoundIsReached )
+   {
+      cmapLapParaInitiator->setFinalSolverStatus(ParaCMapLAP::LowerBoundIsReached);
    }
 
    // Logging : Statistics of Load Coordinator

@@ -62,6 +62,7 @@ namespace LapTools
 /// @param[in] inBlocksize block size;
 /// @param[in] inTimeLimit
 /// @return bool true: normal terminate, false: abnormal one
+/// @remark If lowerBound is positive value, algorithm terminates wheh it founds the lattice vector whose norm is less than lowerBound
 ///
 template<typename BasisFloat, typename GSFloat, typename EnumGSFloat>
 bool
@@ -135,6 +136,7 @@ DeepBkz<BasisFloat, GSFloat, EnumGSFloat>::preprocess(
 /// @param[out] shouldAbort true if it should abort else false
 /// @remark runningTime is updated in this function
 /// @remark autoAborted is updaetd in this function
+/// @remark If lowerBound is positive value, wheh it founds the lattice vector whose norm is less than lowerBound
 ///
 template<typename BasisFloat, typename GSFloat, typename EnumGSFloat>
 bool
@@ -158,6 +160,7 @@ DeepBkz<BasisFloat, GSFloat, EnumGSFloat>::tour(
       bool enumSuccess = step(k, z, shouldAbort);
       if( !fullTour && enumSuccess ){ break; }
       communicateInTour(shouldAbort);
+      if( lowerBound > 0 && L->shortestNorm() < lowerBound ){ shouldAbort = true; }
    }
    if( z == end ){ hasReduced = true; }   // not updated
 

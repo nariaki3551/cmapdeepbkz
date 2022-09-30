@@ -579,6 +579,9 @@ CMapLapParaInitiator::outputFinalSolverStatistics(
    case HardTimeLimitIsReached:
       *os << "solving was interrupted [ hard time limit reached ]" << std::endl;
       break;
+   case LowerBoundIsReached:
+      *os << "solving was interrupted [ lower bound reached ]" << std::endl;
+      break;
    case ComputingWasInterrupted:
       *os << "solving was interrupted" << std::endl;
       break;

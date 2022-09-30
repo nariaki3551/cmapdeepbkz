@@ -56,7 +56,11 @@ def main(args):
             print(f"({i+1}/{num_test} {test.name}) {test.command}")
             print()
     else:
-        test_commands(test_list, args)
+        if args.long:
+            timeout = 300 * 3;
+        else:
+            timeout = 30 * 3;
+        test_commands(test_list, args, timeout)
 
 
 def gen_test_list(args):
@@ -154,6 +158,10 @@ def gen_test_list(args):
                 "thread -- statistics share data pool",
                 "algo_assign.deepbkz_and_enum_and_sieve.set deepbkz.set enum.set sieve.set sharedata_pool_stat.set"
             ),
+            (
+                "thread -- with lower bound of approximated factor",
+                "algo_assign.all_deepbkz.set deepbkz.set loweralpha.set"
+            )
         ]
 
         for test_name, appendix_setting_files in appendix_setting_files_list:
@@ -236,6 +244,10 @@ def gen_test_list(args):
                 "mpi -- statistics share data pool",
                 "algo_assign.deepbkz_and_enum_and_sieve.set deepbkz.set enum.set sieve.set sharedata_pool_stat.set"
             ),
+            (
+                "mpi -- with lower bound of approximated factor",
+                "algo_assign.all_deepbkz.set deepbkz.set loweralpha.set"
+            )
         ]
         for test_name, appendix_setting_files in appendix_setting_files_list:
             num_setting_files = len(base_setting_files.split()) + len(appendix_setting_files.split())
@@ -292,13 +304,14 @@ def gen_test_list(args):
     return test_list
 
 
-def test_commands(test_list, args):
+def test_commands(test_list, args, timeout):
     """execute commands and display results
 
     Parameters
     ----------
     test_list : list of Test
     args : argparse.Namespace
+    timeout: float
     """
     num_test = len(test_list)
     results = list()
@@ -309,9 +322,15 @@ def test_commands(test_list, args):
         start_time = time.time()
         try:
             if args.verbose:
-                subprocess.run(test.command, check=True, shell=True)
+                stdout, stderr = None, None
             else:
-                subprocess.run(test.command, check=True, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                stdout, stderr = subprocess.DEVNULL, subprocess.DEVNULL
+            subprocess.run(test.command, check=True, shell=True, stdout=stdout, stderr=stderr, timeout=timeout)
+        except subprocess.TimeoutExpired:
+            print(f"\r({i+1}/{num_test} {test.name})[{red_str('Timeout')}] time {time.time()-start_time:.2f}s  {test.command}")
+            results.append("Timeout")
+            times.append(time.time()-start_time)
+            continue
         except subprocess.CalledProcessError:
             print(f"\r({i+1}/{num_test} {test.name})[{red_str('NG')}] time {time.time()-start_time:.2f}s  {test.command}")
             results.append("NG")

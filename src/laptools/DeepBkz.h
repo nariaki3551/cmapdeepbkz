@@ -90,6 +90,7 @@ protected:
 
    int         blocksize;              ///< blocksize of BKZ
    double      timeLimit;              ///< time limit
+   double      lowerBound;             ///< lowerbound of lattice vector norm
 
    DeepLll<BasisFloat, GSFloat>     lllObj;  ///< lll tool
    Enumeration<BasisFloat, GSFloat, EnumGSFloat> enumObj;   ///< enumeration tool
@@ -141,6 +142,7 @@ public:
          T__(0.0),
          osCsvLog(nullptr),
          timeLimit(-1),
+         lowerBound(-1),
          nTour(0),
          bestObjectiveValue(DBL_MAX),
          nSlopeNoDecrease(0),
@@ -203,6 +205,7 @@ public:
    /// @param[in] inBlocksize block size;
    /// @param[in] inTimeLimit
    /// @return bool true: normal terminate, false: abnormal one
+   /// @remark If lowerBound is positive value, algorithm terminates wheh it founds the lattice vector whose norm is less than lowerBound
    ///
    virtual bool deepbkz(
          int inBlocksize,
@@ -250,6 +253,7 @@ public:
    /// @param[out] shouldAbort true if it should abort else false
    /// @remark runningTime is updated in this function
    /// @remark autoAborted is updaetd in this function
+   /// @remark If lowerBound is positive value, wheh it founds the lattice vector whose norm is less than lowerBound
    ///
    virtual bool tour(
          bool &shouldAbort
@@ -338,6 +342,30 @@ public:
          )
    {
       osCsvLog = inOsCsvLog;
+   }
+
+
+   ///
+   /// @brief setter of lowerBound
+   /// @param[in] inLowerBound
+   ///
+   virtual void setLowerBound(
+         double inLowerBound
+         )
+   {
+      lowerBound = inLowerBound;
+   }
+
+
+   ///
+   /// @brief setter of lowerBound
+   /// @param[in] inLowerBound
+   ///
+   virtual double getLowerBound(
+         double inLowerBound
+         )
+   {
+      return lowerBound;
    }
 
 
