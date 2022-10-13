@@ -1193,16 +1193,6 @@ public:
    }
 
    ///
-   /// create ParaParamSet object
-   /// @return pointer to ParaParamSet object
-   ///
-   virtual UG::ParaParamSet *createParaParamSet(
-         )
-   {
-      return new CMapLapParaParamSet();
-   }
-
-   ///
    /// create ParaSolverState object by default constructor
    /// @return pointer to ParaSolverState object
    ///

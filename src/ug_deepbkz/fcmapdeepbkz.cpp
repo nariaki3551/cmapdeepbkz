@@ -47,8 +47,8 @@
 #include <memory>
 #include "ug/paraCommCPP11.h"
 #include "ug/paraInstance.h"
-#include "ug/paraParamSet.h"
 #include "ug/paraTimer.h"
+#include "cmapLapParaParamSet.h"
 #include "cmapLapParaCommTh.h"
 #include "cmapLapParaDef.h"
 #include "cmapLapParaDeterministicTimer.h"
@@ -61,7 +61,7 @@
 using namespace ParaCMapLAP;
 
 static std::shared_ptr<CMapLapParaCommTh> comm(nullptr);
-static std::shared_ptr<UG::ParaParamSet> paraParams(nullptr);
+static std::shared_ptr<CMapLapParaParamSet> paraParams(nullptr);
 static std::unique_ptr<CMapDeepBkzParaLoadCoordinator> paraLc(nullptr);
 static CMapLapParaSolverLocalComm **localComm = nullptr;
 static int nSolvers = 0;
@@ -320,7 +320,7 @@ main (
    paraTimer->init(comm.get());
 
    nSolvers = comm->getSize() - 1;
-   paraParams.reset(comm->createParaParamSet());
+   paraParams = std::shared_ptr<CMapLapParaParamSet>(new CMapLapParaParamSet());
    paraParams->read(comm.get(), argv[1]);
    for( int i = 0; i < nOverwriteFilenames; i++ )
       paraParams->read(comm.get(), overwriteFilenames[i]);

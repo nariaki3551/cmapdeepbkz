@@ -172,12 +172,12 @@ public:
          );
 
 
-
    ///
    /// @breif send SolverState of DeepBkz
    ///
    void sendStatus(
          );
+
 
    ///
    /// @breif setter of nSendVectors

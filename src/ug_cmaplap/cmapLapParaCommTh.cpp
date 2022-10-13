@@ -188,13 +188,6 @@ CMapLapParaCommTh::createCMapLapParaSolution(
    return new CMapLapParaSolutionTh(inThreadId, inV, inObjValue);
 }
 
-UG::ParaParamSet*
-CMapLapParaCommTh::createParaParamSet(
-      )
-{
-   return new CMapLapParaParamSet();
-}
-
 ///
 /// create ParaSolverTerminationState object by default constructor
 /// @return pointer to ParaSolverTerminationState object
