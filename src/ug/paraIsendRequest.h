@@ -184,7 +184,7 @@ public:
       }
       default:
       {
-         std::cerr << "Invalid dataType = " << dataType << std::endl;
+         std::cerr << "Invalid dataType = " << static_cast<int>(dataType) << std::endl;
          abort();
       }
       }
@@ -285,7 +285,7 @@ public:
          }
          default:
          {
-            std::cerr << "Invalid dataType = " << dataType << std::endl;
+            std::cerr << "Invalid dataType = " << static_cast<int>(dataType) << std::endl;
             abort();
          }
          }
@@ -366,7 +366,7 @@ public:
       }
       default:
       {
-         std::cerr << "Invalid dataType = " << dataType << std::endl;
+         std::cerr << "Invalid dataType = " << static_cast<int>(dataType) << std::endl;
          abort();
       }
       }

@@ -37,6 +37,7 @@
 #include <unistd.h>
 #include <thread>
 #include <signal.h>
+#include "cmapLapParaParamSet.h"
 #include "cmapLapParaSolverLocalComm.h"
 #include "cmapLapParaCommMpi.h"
 #include "cmapLapParaInstance.h"
@@ -47,14 +48,14 @@
 
 using namespace ParaCMapLAP;
 
-static std::shared_ptr<UG::ParaParamSet> paraParams(nullptr);
+static std::shared_ptr<CMapLapParaParamSet> paraParams(nullptr);
 static std::unique_ptr<CMapDeepBkzParaLoadCoordinator> paraLc(nullptr);
 static std::unique_ptr<CMapLapParaSolverLocalComm> localComm(nullptr);
 
 struct SolverThreadData_t {
    int argc;
    char **argv;
-   UG::ParaParamSet *paraParams;
+   CMapLapParaParamSet *paraParams;
    CMapLapParaCommMpi *comm;
    UG::ParaTimer *paraTimer;
    int rank;
@@ -298,7 +299,7 @@ main (
    std::shared_ptr<UG::ParaTimer> paraTimer(new UG::ParaTimerMpi());
    paraTimer->init(comm);
 
-   paraParams.reset(comm->createParaParamSet());
+   paraParams = std::shared_ptr<CMapLapParaParamSet>(new CMapLapParaParamSet());
    paraParams->read(comm, argv[1]);
    for( int i = 0; i < nOverwriteFilenames; i++ )
    {

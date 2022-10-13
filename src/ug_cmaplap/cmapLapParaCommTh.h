@@ -197,13 +197,6 @@ public:
          );
 
    ///
-   /// create ParaParamSet object
-   /// @return pointer to ParaParamSet object
-   ///
-   virtual UG::ParaParamSet *createParaParamSet(
-         );
-
-   ///
    /// create ParaSolverState object by default constructor
    /// @return pointer to ParaSolverState object
    ///

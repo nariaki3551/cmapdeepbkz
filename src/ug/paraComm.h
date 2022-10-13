@@ -257,13 +257,6 @@ public:
          ) = 0;
 
    ///
-   /// create ParaParamSet object
-   /// @return pointer to ParaParamSet object
-   ///
-   virtual ParaParamSet *createParaParamSet(
-         ) = 0;
-
-   ///
    /// create ParaSolverState object by default constructor
    /// @return pointer to ParaSolverState object
    ///
