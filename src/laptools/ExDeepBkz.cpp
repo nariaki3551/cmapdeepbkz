@@ -63,6 +63,56 @@ namespace LapTools
 
 
 ///
+/// @brief Constructor
+/// @param[in] inL         Lattice
+/// @param[in] inVerbose   <= 0 : not, 1 : light, 2: heavy
+/// @param[in] inRank      solver-id
+/// @param[in] inThreadId  solver-id
+///
+template<typename BasisFloat, typename GSFloat, typename EnumGSFloat>
+ExDeepBkz<BasisFloat, GSFloat, EnumGSFloat>::ExDeepBkz(
+      LatticePtr inL,
+      int inRank=1,
+      int inThreadId=0,
+      int inVerbose=0
+      )
+   :
+      Reduction<BasisFloat, GSFloat>(inL, inRank, inThreadId, inVerbose),
+      rank(inRank),
+      threadId(inThreadId),
+      verbose(inVerbose),
+      T__(0.0),
+      osCsvLog(nullptr),
+      timeLimit(-1),
+      lowerBound(-1),
+      nTour(0),
+      bestObjectiveValue(DBL_MAX),
+      nSlopeNoDecrease(0),
+      prevSlopeGSA(0),
+      hashCounterSize(20),
+      runningTime(0.0),
+      mergeTime(0.0),
+      hasReduced(false),
+      autoAborted(false)
+{
+   L = inL;
+   config = inL->config;
+   lllObj = DeepLll<BasisFloat, GSFloat>(inL, inRank, inThreadId);
+   enumObj = Enumeration<BasisFloat, GSFloat, EnumGSFloat>(inL, inRank, inThreadId);
+   v.resize(inL->n);
+   coeffv.resize(inL->n);
+   nu__.resize(inL->m);
+   D__.resize(inL->m);
+   S__.resize(inL->m);
+   prevBasis = inL->basis;
+   hashCounter.resize(hashCounterSize);
+
+   LatticeBasis<int> basis = L->basis.template cast<int>();
+   DeepBKZToolLattice = DeepBKZToolLatticePtr(new DeepBKZTool::lattice(basis));
+}
+
+
+///
 /// @brief DeepBkz reduction algorithm
 ///        for Matrix[begin:end] and algorithm start at "start index"
 /// @param[in] inBlocksize block size;
