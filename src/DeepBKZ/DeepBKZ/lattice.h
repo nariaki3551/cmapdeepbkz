@@ -11,6 +11,9 @@
 using namespace std;
 using namespace NTL;
 
+namespace DeepBKZTool
+{
+
 #if 0
 /* fast version */
 typedef int UINT;
@@ -169,5 +172,7 @@ inline void lattice::GSA_slope(long double &slope, int start, int end)
 	}
 	slope = (mm*tmp1 - tmp3*tmp2)/(mm*tmp4 - tmp3*tmp3);
 }
+
+}  // namespace DeepBKZTool
 
 #endif // LATTICE_H

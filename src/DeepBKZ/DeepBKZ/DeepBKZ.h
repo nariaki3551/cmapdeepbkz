@@ -6,6 +6,9 @@
 #include "Enum.h"
 #include <time.h>
 
+namespace DeepBKZTool
+{
+
 /**********
 DeepBKZ 
 **********/
@@ -244,6 +247,6 @@ inline bool lattice::SubDeepBKZ(int start, int end, int b, FLOAT alpha, int gamm
 	return true;
 }
 
-
+}  // namespace DeepBKZTool
 
 #endif // DeepBKZ_H

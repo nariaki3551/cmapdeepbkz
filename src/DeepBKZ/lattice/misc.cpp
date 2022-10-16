@@ -155,7 +155,7 @@ template <typename T> inline void display(T* a,int n) {
 template <typename T> inline T squared_norm(vec_ZZ a) {
     T ret = 0;
     ZZ ip;
-    InnerProduct(ip,a,a);
+    NTL::InnerProduct(ip,a,a);
     conv(ret,ip);
     return ret;
 }

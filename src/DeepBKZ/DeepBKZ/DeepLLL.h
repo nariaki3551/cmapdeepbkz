@@ -3,6 +3,9 @@
 
 #include "lattice.h"
 
+namespace DeepBKZTool
+{
+
 /******************
 size-reduce at k
 ******************/
@@ -145,5 +148,6 @@ inline bool lattice::DeepLLL(int start, int end, int h, FLOAT alpha, int gamma)
 	return true; 
 }
 
+}  // namespace DeepBKZTool
 
 #endif

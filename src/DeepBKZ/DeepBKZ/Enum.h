@@ -3,6 +3,9 @@
 
 #include "lattice.h"
 
+namespace DeepBKZTool
+{
+
 /*****************************************************************************
 Pruned Enumeration (Latest Date: January 29, 2018 by Yasuda)
 Input
@@ -100,5 +103,7 @@ inline bool lattice::Enum(Vec<int> &result, Vec<double> SR, int g, int h)
 		}
 	}
 }
+
+}  // namespace DeepBKZTool
 
 #endif //ENUM_H

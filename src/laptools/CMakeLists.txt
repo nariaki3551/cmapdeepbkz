@@ -26,6 +26,11 @@ target_link_libraries(
     laptoolslib PRIVATE
     ${BASE_LIB}
     )
+target_include_directories(
+    laptoolslib PRIVATE
+    ${Boost_INCLUDE_DIRS}
+    )
+
 
 add_executable(
     seqcmaplap

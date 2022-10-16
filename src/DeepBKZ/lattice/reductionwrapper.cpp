@@ -16,7 +16,7 @@
 template<typename T=double> T LengthOf(vec_ZZ& b) {
     //approximated length
     ZZ ip;
-    InnerProduct(ip, b,b);
+    NTL::InnerProduct(ip, b,b);
     if (ip==0) return 0;
     
     //To prevent overflow
