@@ -53,10 +53,6 @@ inline bool lattice::DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, 
       if (shouldAbort) return true;
 
       if (j == end-1) {
-
-         communicate(shouldAbort);
-         if (shouldAbort) return true;
-
          j = start-1; ++tour;
          GSA_slope(rho1, start, end);
          if (tour % 1 == 0) {
@@ -77,6 +73,9 @@ inline bool lattice::DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, 
             } else { N = 0; }
             rho = rho1;
          }
+
+         communicate(shouldAbort);
+         if (shouldAbort) return true;
       }
       ++j; k = min(j+b-1, end); h = min(k+1, end);
 

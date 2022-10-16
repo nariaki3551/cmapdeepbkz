@@ -90,10 +90,14 @@ public:
       L = inL;
       config = inL->config;
       cmapLapParaSolver = inCmapLapParaSolver;
+      SetDims(L->m, L->n);
       syncBasisToNTL();
    }
 
 
+   ///
+   /// @brief synchronize DeepBKZTool::lattice.basis to LapTools::Lattice.basis
+   ///
    void syncBasisToEigen(
          )
    {
@@ -103,6 +107,10 @@ public:
       L->setGSO();
    }
 
+
+   ///
+   /// @brief synchronize LapTools::Lattice.basis to DeepBKZTool::lattice.basis
+   ///
    void syncBasisToNTL(
          )
    {
@@ -210,9 +218,9 @@ public:
    void sendStatus(
          )
    {
-      ParaCMapLAP::LatticeBasis<int> basis = L->basis.template cast<int>();
+      ParaCMapLAP::LatticeBasis<int> _basis = L->basis.template cast<int>();
       cmapLapParaSolver->sendSolverState(
-            basis,
+            _basis,
             -1,
             -1,
             -1
