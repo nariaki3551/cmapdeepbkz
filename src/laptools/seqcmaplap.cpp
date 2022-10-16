@@ -39,6 +39,7 @@
 #include <string>
 
 #include "DeepBkz.h"
+#include "ExDeepBkz.h"
 #include "DeepLll.h"
 #include "Enumeration.h"
 #include "GaussSieve.h"
@@ -81,6 +82,7 @@ void usage(
    s << "                                                               " << std::endl;
    s << "    algorithm:                                                 " << std::endl;
    s << "        deeplll, deepbkz(default)                              " << std::endl;
+   s << "        exdeepbkz                                              " << std::endl;
    s << "        enum, subenum                                          " << std::endl;
    s << "        gausssieve                                             " << std::endl;
    s << "        data(show lattice data)                                " << std::endl;
@@ -170,12 +172,17 @@ int run(
       }
       bkzObj.deepbkz(blocksize, config.TimeLimit);
    }
-   // else if( algorithm == "recursivedeepbkz" )
-   // {
-   //    int blocksize = config.beta;
-   //    RecursiveDeepBkz<BasisFloat, GSFloat, EnumGSFloat> bkzObj{L, rank, thread, verbose};
-   //    bkzObj.deepbkz(blocksize);
-   // }
+   else if( algorithm == "exdeepbkz" )
+   {
+      int blocksize = config.beta;
+      ExDeepBkz<BasisFloat, GSFloat, EnumGSFloat> bkzObj{L, rank, thread, verbose};
+      if( config.OutputCsvLogFile )
+      {
+         bkzObj.setOsCsvLog(ofsCsvLog);
+         *ofsCsvLog << bkzObj.getCsvLogHeader() << std::endl;
+      }
+      bkzObj.deepbkz(blocksize, config.TimeLimit);
+   }
    else if( algorithm == "gausssieve" )
    {
       if( verbose > 0 ){ std::cout << Log::getLogHeader() << std::endl; }
