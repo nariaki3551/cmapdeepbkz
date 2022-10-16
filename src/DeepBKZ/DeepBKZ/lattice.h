@@ -61,6 +61,8 @@ public:
 	/* DeepBKZ.h */
 	bool SubDeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, int num);
 	bool DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, int abort);
+   bool communicate(bool& shouldAbort){ return true; }
+   bool communicateInTour(bool& shouldAbort){ return true; }
 
 	/* Constructor */
    lattice(){};

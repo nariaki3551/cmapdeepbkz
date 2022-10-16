@@ -45,7 +45,7 @@
 #include "Config.h"
 
 
-class SynchronousCMapDeepBkzConfig : public Config
+class SynchronousCMapDeepBkzConfig : public LapTools::Config
 {
 
 public:

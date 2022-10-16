@@ -102,7 +102,7 @@ CMapTestParaSolver::runDeepBkz(
    auto L = std::make_shared<LapTools::Lattice<int, double>>(*cmapLapParaTask->getBasis());
 
    // load from param file
-   Config config(paraParams->getStringParamValue(CMapLapParamFilePath));
+   LapTools::Config config(paraParams->getStringParamValue(CMapLapParamFilePath));
    int verbose = paraParams->getIntParamValue(DeepBkzVerbose);
    config.Quiet = ( verbose == 0 );
    L->setConfig(config);
@@ -157,7 +157,7 @@ CMapTestParaSolver::runEnum(
    auto L = std::make_shared<LapTools::Lattice<int, double>>(*cmapLapParaTask->getBasis());
 
    // load from param file
-   Config config(paraParams->getStringParamValue(CMapLapParamFilePath));
+   LapTools::Config config(paraParams->getStringParamValue(CMapLapParamFilePath));
    int verbose = paraParams->getIntParamValue(EnumVerbose);
    config.Quiet = ( verbose == 0 );
    L->setConfig(config);
@@ -195,7 +195,7 @@ CMapTestParaSolver::runSieve(
    auto L = std::make_shared<LapTools::Lattice<int, double>>(*cmapLapParaTask->getBasis());
 
    // load from param file
-   Config config(paraParams->getStringParamValue(CMapLapParamFilePath));
+   LapTools::Config config(paraParams->getStringParamValue(CMapLapParamFilePath));
    int verbose = paraParams->getIntParamValue(SieveVerbose);
    config.Quiet = ( verbose == 0 );
    L->setConfig(config);
