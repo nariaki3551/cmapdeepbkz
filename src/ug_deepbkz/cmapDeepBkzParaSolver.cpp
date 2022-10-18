@@ -221,12 +221,9 @@ public:
       ParaCMapLAP::LatticeBasis<int> _basis = L->basis.template cast<int>();
       cmapLapParaSolver->sendSolverState(
             _basis,
-            -1,
-            -1,
-            -1
-            // this->blocksize,
-            // this->nTour,
-            // this->runningTime
+            -1,   // blocksize
+            -1,   // number of tours
+            -1    // running time
             );
    }
 

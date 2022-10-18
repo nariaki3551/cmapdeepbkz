@@ -157,6 +157,8 @@ inline bool lattice::DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, 
          current = pow(B(start), 0.5);
          cout << "Time " << total << " Norm = " << current << endl;
          cout << basis(start) << endl;
+         communicate(shouldAbort);
+         if( shouldAbort ) return true;
       }
    }
 
@@ -257,6 +259,8 @@ inline bool lattice::SubDeepBKZ(int start, int end, int b, FLOAT alpha, int gamm
          current = pow(B(start), 0.5);
          cout << "Norm = " << current << endl;
          cout << basis(start) << endl;
+         communicate(shouldAbort);
+         if( shouldAbort ) return true;
       }
    }
    return true;

@@ -2,7 +2,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/usr/include
     ${CMAKE_SOURCE_DIR}/src/DeepBKZ
-    /home/tateiwa/usr/source/boost_1_75_0
+    ${BOOST_DIR}
     )
 
 if( CMAKE_BUILD_TYPE STREQUAL "Release")
