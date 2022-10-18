@@ -37,6 +37,10 @@
 #include <sstream>
 
 
+namespace LapTools
+{
+
+
 ///
 /// @brief set parameters from argument
 /// @param[in] argc number of arguments
@@ -451,3 +455,5 @@ Config::setParam(
    }
    return true;
 }
+
+}  // namespace LapTools

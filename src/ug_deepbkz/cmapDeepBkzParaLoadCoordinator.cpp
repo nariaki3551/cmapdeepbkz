@@ -209,10 +209,12 @@ CMapDeepBkzParaLoadCoordinator::processTagSolverState(
          // sharedLattice > receivedLattice
          *osLogSharedLattice << "Replace,Rank," << source << ",Thread," <<  solverState->getThreadId() << ",Time," << paraTimer->getElapsedTime()
             << ",unupdate," << numOfUnupdateSolverState << ",nShared," << nShared << ",index," << index << std::endl
-            << receivedLattice->B.transpose() << std::endl;
+            // << receivedLattice->B.transpose()
+            << std::endl;
          std::cout << "Replace,Rank," << source << ",Thread," <<  solverState->getThreadId() << ",Time," << paraTimer->getElapsedTime()
             << ",unupdate," << numOfUnupdateSolverState << ",nShared," << nShared << ",index," << index << std::endl
-            << receivedLattice->B.transpose() << std::endl;
+            // << receivedLattice->B.transpose()
+            << std::endl;
 
          Eigen::VectorXd approxVector(n);
          for( int i = 0; i < n; ++i )
@@ -240,7 +242,8 @@ CMapDeepBkzParaLoadCoordinator::processTagSolverState(
          /// sharedLattice == receivedLattice
          *osLogSharedLattice << "Replace,Rank," << source << ",Thread," <<  solverState->getThreadId() << ",Time," << paraTimer->getElapsedTime()
             << ",unupdate," << numOfUnupdateSolverState << ",nShared," << nShared << ",index,-1" << std::endl
-            << receivedLattice->B.transpose() << std::endl;
+            // << receivedLattice->B.transpose()
+            << std::endl;
          Eigen::VectorXd approxVector(n);
          for( int i = 0; i < n; ++i )
             approxVector(i) = receivedLattice->approxFactor(-1, i);

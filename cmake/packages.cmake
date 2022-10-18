@@ -7,6 +7,8 @@ find_library( NTL_LIB ntl           HINTS ${CMAKE_SOURCE_DIR}/usr/lib REQUIRED )
 find_library( GMP_LIB gmp           HINTS ${CMAKE_SOURCE_DIR}/usr/lib REQUIRED )
 find_library( PTHREAD_LIB pthread   HINTS ${CMAKE_SOURCE_DIR}/usr/lib REQUIRED )
 find_package( BLAS )
+find_package( MPFR REQUIRED )
+find_package( GSL REQUIRED )
 
 set(
     BASE_LIB
@@ -15,6 +17,8 @@ set(
     ${NTL_LIB}
     ${GMP_LIB}
     ${PTHREAD_LIB}
+    ${MPFR_LIBRARY}
+    ${GSL_LIBRARY}
     )
 
 if( BLAS_FOUND )

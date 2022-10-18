@@ -50,6 +50,7 @@ protected:
 
    void solve();
    void runDeepBkz();
+   void runExDeepBkz();
 
 
 public:
@@ -68,5 +69,6 @@ public:
          );
 
 };
+
 
 #endif // __CMAP_DEEPBKZ_PARA_SOLVER_H__

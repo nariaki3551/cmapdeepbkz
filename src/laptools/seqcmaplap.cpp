@@ -50,8 +50,10 @@
 #include "Log.h"
 #include "Timer.h"
 
-
-using namespace LapTools;
+#include <lattice/pbkz.hpp>
+#include <DeepBKZ/lattice.h>
+#include <DeepBKZ/DeepLLL.h>
+#include <DeepBKZ/DeepBKZ.h>
 
 
 void usage(
@@ -81,6 +83,7 @@ void usage(
    s << "                                                               " << std::endl;
    s << "    algorithm:                                                 " << std::endl;
    s << "        deeplll, deepbkz(default)                              " << std::endl;
+   s << "        exdeepbkz                                              " << std::endl;
    s << "        enum, subenum                                          " << std::endl;
    s << "        gausssieve                                             " << std::endl;
    s << "        data(show lattice data)                                " << std::endl;
@@ -90,14 +93,14 @@ void usage(
 
 template<typename BasisFloat=int, typename GSFloat=double, typename EnumGSFloat=double>
 int run(
-      Config &config,
+      LapTools::Config &config,
       int verbose
    )
 {
-   double startTime = Timer::getElapsedTime();
+   double startTime = LapTools::Timer::getElapsedTime();
 
    // read input file
-   auto L = std::make_shared<Lattice<BasisFloat, GSFloat>>(config.InputFile);
+   auto L = std::make_shared<LapTools::Lattice<BasisFloat, GSFloat>>(config.InputFile);
    L->setConfig(config);
 
    std::string algorithm = config.Algorithm;
@@ -111,11 +114,11 @@ int run(
    std::cout << "run " << algorithm << std::endl;
    if( algorithm == "enum" )
    {
-      DeepLll<BasisFloat, GSFloat> deeplllObj{L, rank, thread, verbose};
+      LapTools::DeepLll<BasisFloat, GSFloat> deeplllObj{L, rank, thread, verbose};
       deeplllObj.deeplll();
-      LatticeVector<BasisFloat> v = L->basis.row(0);
-      LatticeVector<BasisFloat> coeffs(L->n); coeffs(0) = 1;
-      Enumeration<BasisFloat, GSFloat, EnumGSFloat> enumObj{L, rank, thread, verbose};
+      LapTools::LatticeVector<BasisFloat> v = L->basis.row(0);
+      LapTools::LatticeVector<BasisFloat> coeffs(L->n); coeffs(0) = 1;
+      LapTools::Enumeration<BasisFloat, GSFloat, EnumGSFloat> enumObj{L, rank, thread, verbose};
       if( config.OutputCsvLogFile )
       {
          enumObj.setOsCsvLog(ofsCsvLog);
@@ -125,16 +128,16 @@ int run(
       enumObj.projectedEnum(v, coeffs, -1, config.TimeLimit);
       std::cout
          << L->toSimpleString(v)
-         << "Time                 : " << Timer::getElapsedTime()
+         << "Time                 : " << LapTools::Timer::getElapsedTime()
          << std::endl;
       return 0;
    }
    else if( algorithm == "subenum" )
    {
-      LatticeVector<BasisFloat> v = L->basis.row(0);
-      LatticeVector<BasisFloat> coeffs(L->n); coeffs(0) = 1;
+      LapTools::LatticeVector<BasisFloat> v = L->basis.row(0);
+      LapTools::LatticeVector<BasisFloat> coeffs(L->n); coeffs(0) = 1;
       int projDim = config.ProjectedDim;
-      SubEnumeration<BasisFloat, GSFloat, EnumGSFloat> enumObj{L, rank, thread, verbose};
+      LapTools::SubEnumeration<BasisFloat, GSFloat, EnumGSFloat> enumObj{L, rank, thread, verbose};
       enumObj.init(0, L->m-1, projDim);
       if( config.OutputCsvLogFile )
       {
@@ -144,14 +147,14 @@ int run(
       enumObj.subEnum(v, coeffs, config.TimeLimit);
       std::cout
          << L->toSimpleString(v)
-         << "Time                 : " << Timer::getElapsedTime() - startTime
+         << "Time                 : " << LapTools::Timer::getElapsedTime() - startTime
          << std::endl;
       return 0;
    }
    else if( algorithm == "deeplll" )
    {
-      if( verbose > 0 ){ std::cout << Log::getLogHeader() << std::endl; }
-      DeepLll<BasisFloat, GSFloat> lllObj{L, rank, thread, verbose};
+      if( verbose > 0 ){ std::cout << LapTools::Log::getLogHeader() << std::endl; }
+      LapTools::DeepLll<BasisFloat, GSFloat> lllObj{L, rank, thread, verbose};
       if( config.OutputCsvLogFile )
       {
          lllObj.setOsCsvLog(ofsCsvLog);
@@ -162,7 +165,7 @@ int run(
    else if( algorithm == "deepbkz" )
    {
       int blocksize = config.beta;
-      DeepBkz<BasisFloat, GSFloat, EnumGSFloat> bkzObj{L, rank, thread, verbose};
+      LapTools::DeepBkz<BasisFloat, GSFloat, EnumGSFloat> bkzObj{L, rank, thread, verbose};
       if( config.OutputCsvLogFile )
       {
          bkzObj.setOsCsvLog(ofsCsvLog);
@@ -170,18 +173,25 @@ int run(
       }
       bkzObj.deepbkz(blocksize, config.TimeLimit);
    }
-   // else if( algorithm == "recursivedeepbkz" )
-   // {
-   //    int blocksize = config.beta;
-   //    RecursiveDeepBkz<BasisFloat, GSFloat, EnumGSFloat> bkzObj{L, rank, thread, verbose};
-   //    bkzObj.deepbkz(blocksize);
-   // }
+   else if( algorithm == "exdeepbkz" )
+   {
+      LapTools::LatticeBasis<int> basis = L->basis.template cast<int>();
+      DeepBKZTool::lattice lattice{basis};
+      int start = 1, end = L->n, gamma = L->n, abort = 4;
+      double alpha = 0.99;
+      int blocksize = config.beta;
+      lattice.DeepBKZ(start, end, blocksize, alpha, gamma, abort);
+      for( int i = 0; i < L->m; ++i )
+         for( int j = 0; j < L->n; ++j )
+            L->basis.coeffRef(i, j) = lattice.basis[i][j];
+      L->setGSO();
+   }
    else if( algorithm == "gausssieve" )
    {
-      if( verbose > 0 ){ std::cout << Log::getLogHeader() << std::endl; }
+      if( verbose > 0 ){ std::cout << LapTools::Log::getLogHeader() << std::endl; }
       int listsize = -1, stacksize = -1, maxCollision = 10000;
-      LatticeVector<BasisFloat> v;
-      GaussSieve<BasisFloat, GSFloat> sieveObj{L, rank, thread, verbose};
+      LapTools::LatticeVector<BasisFloat> v;
+      LapTools::GaussSieve<BasisFloat, GSFloat> sieveObj{L, rank, thread, verbose};
       sieveObj.init(listsize, stacksize, maxCollision);
       if( config.OutputCsvLogFile )
       {
@@ -191,7 +201,7 @@ int run(
       sieveObj.gaussSieve(v, config.TimeLimit);
       std::cout
          << L->toSimpleString(v)
-         << "Time                 : " << Timer::getElapsedTime() - startTime
+         << "Time                 : " << LapTools::Timer::getElapsedTime() - startTime
          << std::endl;
       return 0;
    }
@@ -203,7 +213,7 @@ int run(
 
    std::cout
       << L->toSimpleString()
-      << "Time                 : " << Timer::getElapsedTime() - startTime
+      << "Time                 : " << LapTools::Timer::getElapsedTime() - startTime
       << std::endl;
 
    L->writeBasis(config.OutputFile);
@@ -221,7 +231,7 @@ int main(int argc, char* argv[])
       exit(1);
    }
 
-   Config config;
+   LapTools::Config config;
    if( !config.setParams(argc, argv) )
    {
       usage();
@@ -242,7 +252,7 @@ int main(int argc, char* argv[])
    if( config.Quiet ){ verbose = 0; }
 
    // initialize timer
-   Timer::init();
+   LapTools::Timer::init();
 
    // run main process
    if( config.BasisFloat == "int"

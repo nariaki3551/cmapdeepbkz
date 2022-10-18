@@ -64,11 +64,11 @@ using LatticePtr = std::shared_ptr<LapTools::Lattice<BasisFloat, GSFloat>>;
 
 private:
 
-   LatticePtr  L;             ///< lattice
-   Config      config;        ///< hyper parameters
-   int         rank;          ///< rank
-   int         threadId;      ///< thread Id
-   int         verbose;       ///< verbose <= 0: none, 1: light, 2: medium, 3: heavy
+   LatticePtr L;              ///< lattice
+   LapTools::Config config;   ///< hyper parameters
+   int rank;                  ///< rank
+   int threadId;              ///< thread Id
+   int verbose;               ///< verbose <= 0: none, 1: light, 2: medium, 3: heavy
 
    CMapTestParaSolver *cmapLapParaSolver; ///< communicator to LC
    bool mergeBasisFromLC;                             ///< merge basis from LoadCoordinator
