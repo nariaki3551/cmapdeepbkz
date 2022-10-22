@@ -314,7 +314,7 @@ CMapDeepBkzParaSolver::runDeepBkz(
 
 
 ///
-/// run CMAP-LAP Randomized DeepBkz
+/// run CMAP-LAP Randomized Extended DeepBkz
 ///
 void
 CMapDeepBkzParaSolver::runExDeepBkz(
@@ -338,15 +338,16 @@ CMapDeepBkzParaSolver::runExDeepBkz(
    if( begin < 0 ){ begin = 0; }
    L->randomize(cmapLapParaTask->getSeed(), begin, end);
 
+   // LLL reduction
+   CmapDeepBkz<int, double, double> lllObj{
+      L, this, getRank(), getThreadId(), 0, false};
+   lllObj.deeplll();
+
    // create DeepBkz object
    bool mergeBasisFromLC = ( paraParams->getIntParamValue(DimensionOfSharedLattice) > 0 );
    previousNotificationTime = paraTimer->getElapsedTime() - notificationInterval;
    CmapExDeepBkz<int, double, double> reductionObj{
       L, this, getRank(), getThreadId(), verbose, mergeBasisFromLC};
-
-   // reduction (LLL, DeepLLL)
-   // reductionObj.lll();
-   // reductionObj.deeplll();
 
    // reduction (DeepBKZ)
    int startBlocksize      = paraParams->getIntParamValue(DeepBkzStartBlockSize);
