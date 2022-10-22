@@ -399,7 +399,9 @@ namespace pruning_func {
                 }            
             } else {
                 for (int i=1;i<=n;i++)  sigma[i] = center[i] * 0.1 * mult;
-                samplingpf(pf,center,sigma,lb,(bkzfloat)1.2); } 
+                samplingpf(pf,center,sigma,lb,(bkzfloat)1.2);
+            }
+
             //processing generated curves
             int pploop=0;
 
