@@ -24,7 +24,7 @@ typedef std::vector<std::vector<std::vector<mpfr_float> > > EStemp;
 
 namespace EvenSimplex {
 
-    std::vector<EStemp*> Flarge;
+    thread_local std::vector<EStemp*> Flarge;
     
     template <typename T> int GetESprecision(int dim,T uprob) {
         //uprob is guaranteed probability bound

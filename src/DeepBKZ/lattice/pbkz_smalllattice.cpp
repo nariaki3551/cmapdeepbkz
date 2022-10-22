@@ -41,7 +41,7 @@ template <typename T,typename T2> inline void computeGramSchmidtline(pbkzmatrix<
 
 
 
- template <typename T2,typename T> T ProjectedLength(SmallLatticeBasis<T2,T>& B,int istart,int iend, pbkzvector<T>& vector) {
+template <typename T2,typename T> T ProjectedLength(SmallLatticeBasis<T2,T>& B,int istart,int iend, pbkzvector<T>& vector) {
     //T2=type for element T=type for GS basis
     B.updateGSBasis_noapprox(1,iend);
     T ip;
@@ -63,7 +63,7 @@ template <typename T,typename T2> inline void computeGramSchmidtline(pbkzmatrix<
         if (result < 0.5) return 0;
     }
     return sqrt(result);
- }
+}
  
 template <typename CFLOAT,typename T> int BasisUpdateGSsmall(LatticeBasis<T>& B,mat_ZZ*U,int istart,int iend,FoundENUMVectors& EV,int vl,int option,char memoryflag=0) {
 

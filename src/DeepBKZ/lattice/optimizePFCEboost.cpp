@@ -212,15 +212,15 @@ public:
 
 namespace pruning_func {
 
-        void adjust_pruning_function(std::vector<bkzfloat>& pf) {
-            int n = pf.size()-1;
-            for (int i=2;i<=n;i++) pf[i] = max(pf[i],pf[i-1]);  //monotonically increasing
-            for (int i=1;i<=n;i++) pf[i] = min((bkzfloat)1.0,max((bkzfloat)0.0,pf[i])); //between zero and one
-            pf[n-1] = pf[n] = 1.0;
-            for (int i=n;i>=1;i--) {
-                if (pf[i]==0) pf[i] = pf[i+1];
-            }
+    void adjust_pruning_function(std::vector<bkzfloat>& pf) {
+        int n = pf.size()-1;
+        for (int i=2;i<=n;i++) pf[i] = max(pf[i],pf[i-1]);  //monotonically increasing
+        for (int i=1;i<=n;i++) pf[i] = min((bkzfloat)1.0,max((bkzfloat)0.0,pf[i])); //between zero and one
+        pf[n-1] = pf[n] = 1.0;
+        for (int i=n;i>=1;i--) {
+            if (pf[i]==0) pf[i] = pf[i+1];
         }
+    }
 
     bkzfloat Approx_final_volume(std::vector<bkzfloat>& pf,bkzfloat clim,int istart,int iend) {
         int dim = iend-istart+1;
@@ -253,7 +253,7 @@ namespace pruning_func {
         
         
     
-template <typename T>    bkzfloat optimize_pruning_function_crossentropy(std::vector<bkzfloat>& pf,std::vector<T>& c,bkzfloat ptarget,bkzfloat clim,int timemax,int opttarget,int sharpness,int pfinit,int vl,int option=0,std::string optst="") {
+    template <typename T>    bkzfloat optimize_pruning_function_crossentropy(std::vector<bkzfloat>& pf,std::vector<T>& c,bkzfloat ptarget,bkzfloat clim,int timemax,int opttarget,int sharpness,int pfinit,int vl,int option=0,std::string optst="") {
         //pfinit=0 ... use input pf as the initial bounding function
         init_pruning_func();
         int n = c.size()-1;
@@ -399,10 +399,7 @@ template <typename T>    bkzfloat optimize_pruning_function_crossentropy(std::ve
                 }            
             } else {
                 for (int i=1;i<=n;i++)  sigma[i] = center[i] * 0.1 * mult;
-                samplingpf(pf,center,sigma,lb,(bkzfloat)1.2);
-            }
-
-            
+                samplingpf(pf,center,sigma,lb,(bkzfloat)1.2); } 
             //processing generated curves
             int pploop=0;
 

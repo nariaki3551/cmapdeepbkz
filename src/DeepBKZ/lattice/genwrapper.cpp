@@ -11,8 +11,8 @@
 extern void BigLLL(mat_ZZ& L,mat_ZZ*U,double delta,int vl);
 
 namespace svpc {
-    int init = 0;
-    std::string cachedir;   //cache dir
+    thread_local int init = 0;
+    thread_local std::string cachedir;   //cache dir
     
     void initialize() {
         if (init>0) return; 
@@ -97,8 +97,8 @@ namespace svpc {
 
 namespace isvpc {
     //Generating instances for ideal lattice challenges
-    int init = 0;
-    std::string cachedir;   //cache dir
+    thread_local int init = 0;
+    thread_local std::string cachedir;   //cache dir
     
     void initialize() {
         if (init>0) return; 

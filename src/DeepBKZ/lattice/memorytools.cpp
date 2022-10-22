@@ -8,6 +8,7 @@ namespace shared_memory {
         unsigned int thash;      //hash(typeid.name())
         int id;
     };
+
     bool operator < (const typeandid& a,const typeandid& b) {
         if (a.thash < b.thash) return true;
         if (a.thash == b.thash) {
@@ -23,8 +24,8 @@ namespace shared_memory {
         int size3=0;
     };
 
-    std::map<typeandid,darray> memory;
-    
+    thread_local std::map<typeandid,darray> memory;
+
     template <typename T> void* allocate1(int id,int size,int vl=0) {
         //set vl!=0 when debug
         struct typeandid ti;

@@ -161,7 +161,7 @@ template <typename T> inline T squared_norm(vec_ZZ a) {
 }
 
 
-unsigned char ctzbuff[10000];
+thread_local unsigned char ctzbuff[10000];
 
 template <typename T> void conv_to_ZZ(ZZ& a,T& b) {
     //this function is not thread safe!
@@ -197,7 +197,7 @@ template <typename T> void conv_to_ZZ(ZZ& a,T& b) {
 
 namespace global_error_control {
     
-    std::vector<std::map<string,int> > errortables;
+    thread_local std::vector<std::map<string,int> > errortables;
     // errortables[i] is a table of error reports in thread i
     
     void put_error(std::string s,int code) {
