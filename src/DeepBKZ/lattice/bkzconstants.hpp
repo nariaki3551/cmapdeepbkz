@@ -356,31 +356,31 @@ template <typename T,typename T2> void vec_copy(std::vector<T>& a,autoarray1d<T2
 
 namespace bkzconstants{
 
-    autoarray1d<bkzfloat> vol_unit_ball_table;
-    autoarray1d<bkzfloat> ghconstant_table;
-    autoarray1d<cpp_int> factorial_table;
-    autoarray2d<bkzfloat> simlogfec_table;
-    autoarray2d<cpp_int> binary_coeff_table;
+    thread_local autoarray1d<bkzfloat> vol_unit_ball_table;
+    thread_local autoarray1d<bkzfloat> ghconstant_table;
+    thread_local autoarray1d<cpp_int> factorial_table;
+    thread_local autoarray2d<bkzfloat> simlogfec_table;
+    thread_local autoarray2d<cpp_int> binary_coeff_table;
 
-    autoarray2d<bkzfloat> mainparam_table;
-    autoarray3d<double> ealpha;
-    autoarray3d<double> ualpha;
-    autoarray3d<bkzfloat> eprob;
+    thread_local autoarray2d<bkzfloat> mainparam_table;
+    thread_local autoarray3d<double> ealpha;
+    thread_local autoarray3d<double> ualpha;
+    thread_local autoarray3d<bkzfloat> eprob;
 
-    autoarray3d<double> pfuppertable;
-    autoarray3d<double> pfuppertablev;  //for volume
-    autoarray3d<bkzfloat> pbkzsimlengthtable;
+    thread_local autoarray3d<double> pfuppertable;
+    thread_local autoarray3d<double> pfuppertablev;  //for volume
+    thread_local autoarray3d<bkzfloat> pbkzsimlengthtable;
 
-    autoarray4d<bkzfloat> simtime_enum;
-    autoarray4d<double> simtime_lll;
-    autoarray4d<double> simtime_loop;
+    thread_local autoarray4d<bkzfloat> simtime_enum;
+    thread_local autoarray4d<double> simtime_lll;
+    thread_local autoarray4d<double> simtime_loop;
 
-    autoarray1d<bkzfloat> target_cost_lb_table;
-    autoarray2d<bkzfloat> target_cost_lb_mult_table;
-    autoarray1d<bkzfloat> target_cost_ub_table;
+    thread_local autoarray1d<bkzfloat> target_cost_lb_table;
+    thread_local autoarray2d<bkzfloat> target_cost_lb_mult_table;
+    thread_local autoarray1d<bkzfloat> target_cost_ub_table;
 
-    bool initialized = false;
-    std::string cachedir;
+    thread_local bool initialized = false;
+    thread_local std::string cachedir;
 
     extern void loadcachetable();
 
@@ -460,7 +460,7 @@ namespace bkzconstants{
         return ghconstant_table[dim];
     }
 
-cpp_int binary_coeff(int n,int k) {
+    cpp_int binary_coeff(int n,int k) {
 
         if (k<=0) return 1;
         if (k==1) return n;
@@ -557,7 +557,7 @@ cpp_int binary_coeff(int n,int k) {
     }
 
 
-    double last_load_time = -1;
+    thread_local double last_load_time = -1;
     void loadcachetable() {
         std::string filename;
         initialize();
@@ -677,7 +677,7 @@ cpp_int binary_coeff(int n,int k) {
         }
     }
 
-    double last_save_time = -1;
+    thread_local double last_save_time = -1;
 
     void savecachetable(int force=0) {
 

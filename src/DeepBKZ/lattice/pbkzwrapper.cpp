@@ -29,7 +29,7 @@ template <typename T> inline void EraseZeroVectors(LatticeBasis<T>& B) {
 }
 
 
-mat_ZZ BUCandidates;
+thread_local mat_ZZ BUCandidates;
 
 template <typename T> int BasisUpdate(LatticeBasis<T>& B,mat_ZZ*U,int istart,int iend,FoundENUMVectors& EV,int vl,int option,char memoryflag=0) {
     //Insert vectors after B[istart]

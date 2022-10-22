@@ -22,27 +22,27 @@ extern double Estimate_delta(quad_float* c,int bs);
 
 
 namespace progressive_bkz {
-    double total_pruningfunc_time = 0;
+    thread_local double total_pruningfunc_time = 0;
 }
 
 
 
 namespace pruning_func {
     
-    int initpf = 0;
-    std::vector<std::vector<double> > dtable;     //table of pruning function 
+    thread_local int initpf = 0;
+    thread_local std::vector<std::vector<double> > dtable;     //table of pruning function 
 
     //used for caching pruning functions
-    int buffnum=160000;
-    int** buffa;
-    double** buffb;
-    double** small_modify_a;
-    int** buffva;   //for volume factor cache
-    quad_float** buffvb;
-    double** gnr_share_double;
+    thread_local int buffnum=160000;
+    thread_local int** buffa;
+    thread_local double** buffb;
+    thread_local double** small_modify_a;
+    thread_local int** buffva;   //for volume factor cache
+    thread_local quad_float** buffvb;
+    thread_local double** gnr_share_double;
     
     //used for cache
-    std::string pfsavedir;
+    thread_local std::string pfsavedir;
     
     void init_pruning_func() {
         

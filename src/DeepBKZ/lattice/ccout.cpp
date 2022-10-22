@@ -45,7 +45,7 @@ class dstreambuf : public streambuf {
     }
     
 };
-dstreambuf myds;
+thread_local dstreambuf myds;
 std::iostream ccout(&myds);
 
 #endif

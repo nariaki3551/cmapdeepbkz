@@ -156,9 +156,9 @@ template <typename T,typename T2> T FullENUMCost(std::vector<T2>& c,int istart,i
 
 namespace pruning_func {
 
-    int initpf = 0;
-    std::string pfsavedir;
-    std::vector<std::vector<double> > dtable;     //table of pruning function 
+    thread_local int initpf = 0;
+    thread_local std::string pfsavedir;
+    thread_local std::vector<std::vector<double> > dtable;     //table of pruning function 
     
     void init_pruning_func() {
         

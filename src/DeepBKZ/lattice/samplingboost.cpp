@@ -5,10 +5,10 @@
 
 namespace sampling_tools{
     //basic samplier
-   boost::normal_distribution<> n01(0.0, 1.0);
-   boost::uniform_01<> u01;
-   boost::random::independent_bits_engine<boost::mt19937, 180, boost::multiprecision::cpp_int> rand_gen;
-   std::vector<boost::mt19937> mt;
+   thread_local boost::normal_distribution<> n01(0.0, 1.0);
+   thread_local boost::uniform_01<> u01;
+   thread_local boost::random::independent_bits_engine<boost::mt19937, 180, boost::multiprecision::cpp_int> rand_gen;
+   thread_local std::vector<boost::mt19937> mt;
 
    
     using namespace boost::multiprecision;
@@ -239,7 +239,7 @@ namespace sampling_tools{
 //Sampling from objects
 namespace sampling_tools{
 
-    int initialized = 0;
+    thread_local int initialized = 0;
     
     template <typename DFLOAT> DFLOAT ApproxRatio(std::vector<DFLOAT>& rd,int istart,int iend,int parallel=1,int sampling_mult=10) {
         

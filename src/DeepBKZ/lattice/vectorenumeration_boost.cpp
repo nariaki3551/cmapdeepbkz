@@ -35,9 +35,9 @@
 
 namespace lattice_enum {
 
-    double current_totalnodes;
-    double current_etime;
-    double current_cputime;
+    thread_local double current_totalnodes;
+    thread_local double current_etime;
+    thread_local double current_cputime;
 
     template <typename T,typename T2> void storetomemory(FoundENUMVectors& EV,T2* utildavec, T ctilda, int jj, int kk,int enummode,int undupflag = 0) {
         //Store the data of found vector to cache memory

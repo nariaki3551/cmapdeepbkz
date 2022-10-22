@@ -89,34 +89,14 @@ def gen_test_list(args):
     test_list = list()
 
     #
-    # test for fcmaptest
+    # test for fcmapdeepbkz
     #
     if not args.no_test_shared:
-        binary = "./bin/fcmaptest"
+        binary = "./bin/fcmapdeepbkz"
         appendix_setting_files_list = [
             (
                 "thread -- All DeepBKZ",
                 "algo_assign.all_deepbkz.set deepbkz.set"
-            ),
-            (
-                "thread -- All ENUM",
-                "algo_assign.all_enum.set enum.set"
-            ),
-            (
-                "thread -- All Sieve",
-                "algo_assign.all_sieve.set sieve.set"
-            ),
-            (
-                "thread -- DeepBKZ and ENUM",
-                "algo_assign.deepbkz_and_enum.set deepbkz.set enum.set"
-            ),
-            (
-                "thread -- DeepBKZ and Sieve",
-                "algo_assign.deepbkz_and_sieve.set deepbkz.set sieve.set"
-            ),
-            (
-                "thread -- ENUM and Sieve",
-                "algo_assign.enum_and_sieve.set enum.set sieve.set"
             ),
             (
                 "thread -- Small share data pool",
@@ -155,10 +135,6 @@ def gen_test_list(args):
                 "algo_assign.all_deepbkz.set deepbkz.set small_randomize_rows.set"
             ),
             (
-                "thread -- statistics share data pool",
-                "algo_assign.deepbkz_and_enum_and_sieve.set deepbkz.set enum.set sieve.set sharedata_pool_stat.set"
-            ),
-            (
                 "thread -- with lower bound of approximated factor",
                 "algo_assign.all_deepbkz.set deepbkz.set loweralpha.set"
             )
@@ -178,31 +154,11 @@ def gen_test_list(args):
     # test for paracmaptest
     #
     if not args.no_test_distributed:
-        binary = "./bin/paracmaptest"
+        binary = "./bin/paracmapdeepbkz"
         appendix_setting_files_list = [
             (
                 "mpi -- All DeepBKZ",
                 "algo_assign.all_deepbkz.set deepbkz.set"
-            ),
-            (
-                "mpi -- All ENUM",
-                "algo_assign.all_enum.set enum.set"
-            ),
-            (
-                "mpi -- All Sieve",
-                "algo_assign.all_sieve.set sieve.set"
-            ),
-            (
-                "mpi -- DeepBKZ and ENUM",
-                "algo_assign.deepbkz_and_enum.set deepbkz.set enum.set"
-            ),
-            (
-                "mpi -- DeepBKZ and Sieve",
-                "algo_assign.deepbkz_and_sieve.set deepbkz.set sieve.set"
-            ),
-            (
-                "mpi -- ENUM and Sieve",
-                "algo_assign.enum_and_sieve.set enum.set sieve.set"
             ),
             (
                 "mpi -- Small share data pool",
@@ -241,55 +197,9 @@ def gen_test_list(args):
                 "algo_assign.all_deepbkz.set deepbkz.set small_randomize_rows.set"
             ),
             (
-                "mpi -- statistics share data pool",
-                "algo_assign.deepbkz_and_enum_and_sieve.set deepbkz.set enum.set sieve.set sharedata_pool_stat.set"
-            ),
-            (
                 "mpi -- with lower bound of approximated factor",
                 "algo_assign.all_deepbkz.set deepbkz.set loweralpha.set"
             )
-        ]
-        for test_name, appendix_setting_files in appendix_setting_files_list:
-            num_setting_files = len(base_setting_files.split()) + len(appendix_setting_files.split())
-            appendix_setting_files = " ".join([f"./settings/test/{sfile}" for sfile in appendix_setting_files.split()])
-            test_list.append(
-                Test(
-                    test_name,
-                    f"mpirun -n {sth} {binary} ./settings/default.set {instance} -ntpr 1 -o {num_setting_files} {base_setting_files} {appendix_setting_files}"
-                )
-            )
-
-    #
-    # test for fcmapdeepbkz
-    #
-    if not args.no_test_shared:
-        binary = "./bin/fcmapdeepbkz"
-        appendix_setting_files_list = [
-            (
-                "thread -- Default",
-                ""
-            ),
-        ]
-        for test_name, appendix_setting_files in appendix_setting_files_list:
-            num_setting_files = len(base_setting_files.split()) + len(appendix_setting_files.split())
-            appendix_setting_files = " ".join([f"./settings/test/{sfile}" for sfile in appendix_setting_files.split()])
-            test_list.append(
-                Test(
-                    test_name,
-                    f"{binary} ./settings/default.set {instance} -ntpr 1 -sth {sth} -o {num_setting_files} {base_setting_files} {appendix_setting_files}"
-                )
-            )
-
-    #
-    # test for paracmapdeepbkz
-    #
-    if not args.no_test_distributed:
-        binary = "./bin/paracmapdeepbkz"
-        appendix_setting_files_list = [
-            (
-                "mpi -- Default",
-                ""
-            ),
         ]
         for test_name, appendix_setting_files in appendix_setting_files_list:
             num_setting_files = len(base_setting_files.split()) + len(appendix_setting_files.split())

@@ -295,7 +295,7 @@ template <typename T> void Coeffrepresentation(std::vector<T>& gsrept,vec_ZZ& vv
     Coeffrepresentation(gsrept,vv,B.L,B.gs.mu,B.gs.cd);
 }
 
-FoundENUMVectors currentEV; 
+thread_local FoundENUMVectors currentEV; 
 template <typename T> mat_ZZ ENUMbackend(LatticeBasis<T>& B,vec_ZZ& v,PruningFunction& PF,bkzfloat radius,int enumoption,int vl=0,std::string stringoptions="",int modeoption=modesvp) {
     //vec_ZZ& v is used for cvp subroutine
     currentEV.clearmemory();
