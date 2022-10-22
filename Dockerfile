@@ -19,10 +19,7 @@ ARG PARALLEL=1
 ENV HOME /cmaplap
 WORKDIR ${HOME}
 
-# copy local files into image
-COPY . .
-
-# install cmake with 3.22.3 veresion
+# install cmake version 3.22.3
 RUN mkdir -p Library usr
 RUN cd Library && wget https://github.com/Kitware/CMake/releases/download/v3.22.3/cmake-3.22.3.tar.gz
 RUN cd Library && tar -xf cmake-3.22.3.tar.gz
@@ -30,6 +27,15 @@ RUN cd Library/cmake-3.22.3 && \
     ./bootstrap --prefix=$HOME/usr --parallel=${PARALLEL} && \
     make -j ${PARALLEL} && \
     make install
+
+# install boost version 1.75
+RUN cd Library && wget https://boostorg.jfrog.io/artifactory/main/release/1.75.0/source/boost_1_75_0.tar.gz \
+    && tar -xf boost_1_75_0.tar.gz
+ENV BOOST_DIR Library/boost_1_75_0
+
+# copy local files into image
+COPY . .
+RUN rm -rf ./build/*
 
 RUN echo "export PATH=${HOME}/usr/bin:\$PATH" > .bashrc
 RUN echo source /etc/bash_completion >> .bashrc
