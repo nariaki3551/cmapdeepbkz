@@ -11,17 +11,8 @@ In addition, some programs independent of the UG framework are distributed under
 - [CMAP-DeepBKZ](#cmap-deepbkz)
 - [Table of contents](#table-of-contents)
 - [Setup](#setup)
-  - [Setup on Docker](#setup-on-docker)
-  - [Setup Manually](#setup-manually)
 - [Compiling](#compiling)
-  - [Created binaries](#created-binaries)
-  - [CMake Options](#cmake-options)
-  - [Examples](#examples)
-  - [Check](#check)
 - [Usage](#usage)
-  - [Common Options (CMAP-TEST and CMAP-DeepBKZ)](#common-options-cmap-test-and-cmap-deepbkz)
-  - [Sequential version (test for lattice algorithms)](#sequential-version-test-for-lattice-algorithms)
-- [Contributors](#contributors)
 - [Bibliography](#bibliography)
 
 <br>
@@ -32,13 +23,11 @@ We provide Dockerfile for building virtual environments and making binaries. If 
 
 ## Setup on Docker
 
-If you use docker to set up, you just have to run the following building command. The docker image will be created from ubuntu:20.04.
+If you use docker to set up, you just have to run the following building command. The docker image will be created from ubuntu:20.04. Then you run the docker image.
 
 ```
-docker build -t cmaplap .
+docker build -t cmapdeepbkz .
 ```
-
-Then you run the docker image.
 
 
 ## Setup Manually
@@ -58,16 +47,14 @@ wget https://github.com/Kitware/CMake/releases/download/v3.22.3/cmake-3.22.3.tar
 tar -xf cmake-3.22.3.tar.gz
 cd cmake-3.22.3
 ./bootstrap [--prefix=PREFIX] [--parallel=PARALLEL]
-make
-make install
+make & make install
 
 # install NTL (version 11.5.1)
 wget https://libntl.org/ntl-11.5.1.tar.gz
 tar -xf ntl-11.5.1.tar.gz
 cd ntl-11.5.1/src
 ./configure [PREFIX=PREFIX]
-make
-make install
+make & make install
 
 # install Eigen (version 3.4.0)
 wget https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz
@@ -99,18 +86,17 @@ cmake .. (options)
 make
 ```
 
-When you want to compile a parallel version, set `CMAKE_CXX_COMPILER` to mpi compiler, e.g. `cmake .. -DCMAKE_CXX_COMPILER=mpicxx`.
+When you want to compile using MPI, set `CMAKE_CXX_COMPILER` to mpi compiler, e.g. `cmake .. -DCMAKE_CXX_COMPILER=mpicxx`.
 
 ## Created binaries
 
 - `bin/fcmapdeepbkz`: shared memory version of CMAP-DeepBKZ
 - `bin/paracmapdeepbkz`: distributed memory version of CMAP-DeepBKZ
 
-
 ## CMake Options
 
-- `-DBOOST_DIR`: directory of boost 1.75
-- `-DCMAKE_BUILD_TYPE=Debug`: compile with -g option and debug flag for Eigen library
+- `-DBOOST_DIR`: (required) directory of boost 1.75
+- `-DCMAKE_BUILD_TYPE=Debug`: compile with debug mode
 - `-DSHARED_MEMORY_ONLY=ON`: compile only shared-memory version
 - `-DCMAKE_CXX_COMPILER=XXX`: use XXX mpi compiler (e.g. mpicxx)
 
@@ -118,14 +104,11 @@ When you want to compile a parallel version, set `CMAKE_CXX_COMPILER` to mpi com
 If you do not use mpi compiler (e.g. -DCMAKE_CXX_COMPILER=gcc), the build will fail under `SHARED_MEMORY_ONLY` option is OFF, so you have to use the option `-DSHARED_MEMORY_ONLY=ON`.
 
 
-## Examples
+### Examples
 
-### compile only shared memory version
-  - cmake .. -DBOOST_DIR=/xxx/boost_1_75_0 -DSHARED_MEMORY_ONLY=ON
-### compile both shared and distributed memory version
-  - cmake .. -DBOOST_DIR=/xxx/boost_1_75_0 -DCMAKE_CXX_COMPILER=mpicxx
-### compile with debug mode (add -g, and remove -O3)
-  - cmake .. -DBOOST_DIR=/xxx/boost_1_75_0 -DCMAKE_CXX_COMPILER=mpicxx -DCMAKE_BUILD_TYPE=Debug
+- compile only shared memory version: `cmake .. -DBOOST_DIR=/xxx/boost_1_75_0 -DSHARED_MEMORY_ONLY=ON`
+- compile both shared and distributed memory version: `cmake .. -DBOOST_DIR=/xxx/boost_1_75_0 -DCMAKE_CXX_COMPILER=mpicxx`
+- compile with debug mode (add -g, and remove -O3): `cmake .. -DBOOST_DIR=/xxx/boost_1_75_0 -DCMAKE_CXX_COMPILER=mpicxx -DCMAKE_BUILD_TYPE=Debug`
 
 
 ## Check
@@ -136,32 +119,24 @@ python test.py
 
 <br>
 
-## Usage
+# Usage
 
 This solver is the parallel solver for lattice basis reduction.
 All workers execute lattice basis reduction, and a supervisor shares a part of a lattice basis.
 
-### Shared memory version
+## Shared memory version
 
-`./bin/fcmapdeepbkz settingfile matrixfile -sth yy`
+`./bin/fcmapdeepbkz settingfile matrixfile -sth yy` (e.g. `./bin/fcmapdeepbkz settings/default.set storage/sample_mats/dim80.txt -sth 3`)
 
-matrixfile is the basis file in the same format as the SVP Challenge instance.
-
-**example**
-
-`./bin/fcmapdeepbkz settings/default.set storage/sample_mats/dim80.txt -sth 3`
+matrixfile is the basis file in the same format as the SVP Challenge instance. 
 
 **options**
 
 - sth [Int] : the number of solver threads used
 
-### Distributed memory version
+## Distributed memory version
 
-`mpirun -np yy ./bin/paracmapdeepbkz settingfile matrixfile`
-
-**example**
-
-`mpirun -np 3 ./bin/paracmapdeepbkz settings/default.set storage/sample_mats/dim80.txt`
+`mpirun -np yy ./bin/paracmapdeepbkz settingfile matrixfile` (e.g. `mpirun -np 3 ./bin/paracmapdeepbkz settings/default.set storage/sample_mats/dim80.txt`)
 
 **options**
 
@@ -170,11 +145,7 @@ matrixfile is the basis file in the same format as the SVP Challenge instance.
 
 ## Sequential version (test for DeepBKZ algorithms)
 
-`./bin/seqcmaplap -i (instance file) -a exdeepbkz -b (blocksize)`
-
-**example**
-
-`./bin/seqcmaplap -i ./storage/sample_mats/dim80.txt -a exdeepbkz -b 30`
+`./bin/seqcmaplap -i (instance file) -a exdeepbkz -b (blocksize)` (e.g. `./bin/seqcmaplap -i ./storage/sample_mats/dim80.txt -a exdeepbkz -b 30`)
 
 <br>
 
