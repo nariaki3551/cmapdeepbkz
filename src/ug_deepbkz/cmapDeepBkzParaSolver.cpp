@@ -359,7 +359,7 @@ CMapDeepBkzParaSolver::runExDeepBkz(
    for( blocksize = startBlocksize; blocksize <= endBlocksize; blocksize += intervalBlocksize )
    {
       if( blocksize > endBlocksize ){ break; }
-      reductionObj.DeepBKZ(_start, _end, blocksize, alpha, gamma, abort);
+      reductionObj.DeepBKZ(_start, _end, blocksize, alpha, gamma, abort, getRank());
    }
 
    // Notification message has to complete

@@ -12,7 +12,7 @@ namespace DeepBKZTool
 /**********
 DeepBKZ
 **********/
-inline bool lattice::DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, int abort)
+inline bool lattice::DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, int abort, int solver_id)
 {
    bool res;
    int z, j, k, h, i, m, n = NumRows, l, tour = 0, N, ii, jj;
@@ -56,7 +56,8 @@ inline bool lattice::DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, 
          j = start-1; ++tour;
          GSA_slope(rho1, start, end);
          if (tour % 1 == 0) {
-            cout << "tour = " << tour << ": GSA slope = " << rho1 << endl;
+            cout << "rank " << solver_id << ", block " << b
+               << ", tour " << tour << ", GSA slope " << rho1 << endl;
          }
          /* Early termination */
          if (abort != 0) {

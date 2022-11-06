@@ -60,7 +60,7 @@ public:
 
 	/* DeepBKZ.h */
 	bool SubDeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, int num);
-	bool DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, int abort);
+	bool DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, int abort, int solver_id=0);
    virtual bool communicate(bool& shouldAbort){ return true; }
    virtual bool communicateInTour(bool& shouldAbort){ return true; }
 
