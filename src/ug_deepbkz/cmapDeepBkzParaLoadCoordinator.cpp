@@ -216,10 +216,10 @@ CMapDeepBkzParaLoadCoordinator::processTagSolverState(
             // << receivedLattice->B.transpose()
             << std::endl;
 
-         Eigen::VectorXd approxVector(n);
-         for( int i = 0; i < n; ++i )
-            approxVector(i) = receivedLattice->approxFactor(-1, i);
-         *osLogSharedLattice << approxVector.transpose() << std::endl;
+         // Eigen::VectorXd approxVector(n);
+         // for( int i = 0; i < n; ++i )
+         //    approxVector(i) = receivedLattice->approxFactor(-1, i);
+         // *osLogSharedLattice << approxVector.transpose() << std::endl;
 
          sharedLattice = std::move(receivedLattice);
          numOfUnupdateSolverState = 0;
@@ -244,10 +244,10 @@ CMapDeepBkzParaLoadCoordinator::processTagSolverState(
             << ",unupdate," << numOfUnupdateSolverState << ",nShared," << nShared << ",index,-1" << std::endl
             << receivedLattice->B.transpose()
             << std::endl;
-         Eigen::VectorXd approxVector(n);
-         for( int i = 0; i < n; ++i )
-            approxVector(i) = receivedLattice->approxFactor(-1, i);
-         *osLogSharedLattice << approxVector.transpose() << std::endl;
+         // Eigen::VectorXd approxVector(n);
+         // for( int i = 0; i < n; ++i )
+         //    approxVector(i) = receivedLattice->approxFactor(-1, i);
+         // *osLogSharedLattice << approxVector.transpose() << std::endl;
 
          numOfUnupdateSolverState = 0;
          sharedLattice = std::move(receivedLattice);
