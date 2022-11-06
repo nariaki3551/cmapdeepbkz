@@ -63,6 +63,7 @@ private:
    int rank;                  ///< rank
    int threadId;              ///< thread Id
    int verbose;               ///< verbose <= 0: none, 1: light, 2: medium, 3: heavy
+   double localBestSqnorm;    ///< squared norm of incumbent lattice vector
 
    ParaCMapLAP::CMapLapParaSolver *cmapLapParaSolver; ///< communicator to LC
    bool mergeBasisFromLC;                             ///< merge basis from LoadCoordinator
@@ -92,6 +93,7 @@ public:
       cmapLapParaSolver = inCmapLapParaSolver;
       SetDims(L->m, L->n);
       syncBasisToNTL();
+      localBestSqnorm = L->B(0);
    }
 
 
@@ -131,6 +133,13 @@ public:
          )
    {
       syncBasisToEigen();
+
+      if( L->B(0) < localBestSqnorm )
+      {
+         localBestSqnorm = L->B(0);
+         ParaCMapLAP::LatticeVector<int> v = L->basis.row(0).template cast<int>();
+         cmapLapParaSolver->sendSolution(v, localBestSqnorm);
+      }
 
       // double startTime = LapTools::Timer::getElapsedTime();
 
