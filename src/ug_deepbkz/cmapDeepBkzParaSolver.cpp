@@ -136,6 +136,7 @@ public:
          localBestSqnorm = L->B(0);
          ParaCMapLAP::LatticeVector<int> v = L->basis.row(0).template cast<int>();
          cmapLapParaSolver->sendSolution(v, localBestSqnorm);
+         sendStatus();
          return true;
       }
       return false;
