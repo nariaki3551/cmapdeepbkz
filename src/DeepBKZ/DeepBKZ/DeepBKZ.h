@@ -32,8 +32,8 @@ inline bool lattice::DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, 
    int parallel = 1;
    bool shouldAbort = false;
 
-   cout << "\nDeepBKZ-" << b << endl;
-   cout << "parallel =" << parallel << endl;
+   std::cout << "rank " << std::setw(5) << right << solver_id
+      << ": DeepBKZ-" << b << ", parallel = " << parallel << std::endl;
    SetGSO();
    res = DeepLLL(start, end, start+1, alpha, gamma); /* Initial DeepLLL */
    if (res != true) {
@@ -41,7 +41,8 @@ inline bool lattice::DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, 
       return false;
    }
    current = pow(B(start), 0.5);
-   cout << "Initial norm = " << current << endl;
+   std::cout << "rank " << std::setw(5) << right << solver_id
+      << ": Initial norm = " << current << std::endl;
 
    /* Main loop */
    GSA_slope(rho, start, end);
@@ -56,19 +57,20 @@ inline bool lattice::DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, 
          j = start-1; ++tour;
          GSA_slope(rho1, start, end);
          if (tour % 1 == 0) {
-            cout << "rank " << solver_id << ", block " << b
-               << ", tour " << tour << ", GSA slope " << rho1 << endl;
+            std::cout << "rank " << std::setw(5) << right << solver_id
+               << ": block " << b << ", tour " << tour << ", norm " << current << ", GSA slope " << rho1 << std::endl;
          }
          /* Early termination */
          if (abort != 0) {
             if (fabs(rho) < fabs(rho1)) {
                ++N;
                if (N >= abort) {
-                  cout << "Auto-abort termination" << endl;
                   time_end = clock();
                   total = static_cast<double>(time_end - time_start)/CLOCKS_PER_SEC;
-                  cout << "Total time (seconds) = " << total << endl;
-                  cout << "DeepLLL time (seconds) = " << time << endl;
+                  std::cout << "rank " << std::setw(5) << right << solver_id
+                     << ": Auto-abort termination"
+                     << ", Total time (seconds) = " << total
+                     << ", DeepLLL time (seconds) = " << time << std::endl;
                   return true;
                }
             } else { N = 0; }
@@ -129,7 +131,7 @@ inline bool lattice::DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, 
             if (b < 40) {
                res = DeepLLL(start, end, j, alpha, gamma);
             } else {
-               res = SubDeepBKZ(start, end, roundf(b/2.0), 0.99, gamma, 5*b);
+               res = SubDeepBKZ(start, end, roundf(b/2.0), 0.99, gamma, 5*b, solver_id);
             }
             if (res != true) {
                cout << "SubDeepBKZ error in DeepBKZ" << endl;
@@ -156,17 +158,17 @@ inline bool lattice::DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, 
          time_end = clock();
          total = static_cast<double>(time_end - time_start) / CLOCKS_PER_SEC;
          current = pow(B(start), 0.5);
-         cout << "Time " << total << " Norm = " << current << endl;
-         cout << basis(start) << endl;
-         communicate(shouldAbort);
-         if( shouldAbort ) return true;
+         std::cout << "rank " << std::setw(5) << right << solver_id
+            << ": Time " << total << ", Norm = " << current << ", " << basis(start) << std::endl;
+         sendSolution();
       }
    }
 
    time_end = clock();
    total = static_cast<double>(time_end - time_start)/CLOCKS_PER_SEC;
-   cout << "Total time (seconds) = " << total << endl;
-   cout << "DeepLLL time (seconds) = " << time << endl;
+   std::cout << "rank " << std::setw(5) << right << solver_id
+      << ": Total time (seconds) = " << total
+      << ": DeepLLL time (seconds) = " << time << std::endl;
    return true;
 }
 
@@ -174,7 +176,7 @@ inline bool lattice::DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, 
 /**********
 DeepBKZ
 **********/
-inline bool lattice::SubDeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, int num)
+inline bool lattice::SubDeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, int num, int solver_id)
 {
    bool res;
    int z, j, k, h, i, m, n = NumRows, l, tour = 0, N, ii, jj;
@@ -190,7 +192,8 @@ inline bool lattice::SubDeepBKZ(int start, int end, int b, FLOAT alpha, int gamm
    // SetGSO();
    res = DeepLLL(start, end, start+1, alpha, gamma); /* Initial DeepLLL */
    if (res != true) {
-      cout << "DeepLLL error1 in DeepBKZ" << endl;
+      std::cout << "rank " << std::setw(5) << right << solver_id
+         << ": DeepLLL error1 in DeepBKZ" << std::endl;
       return false;
    }
    current = pow(B(start), 0.5);
@@ -207,6 +210,10 @@ inline bool lattice::SubDeepBKZ(int start, int end, int b, FLOAT alpha, int gamm
 
       if (j == end-1) {
          j = start-1; ++tour;
+         if (tour % 50 == 0) {
+            std::cout << "rank " << std::setw(5) << right <<
+               solver_id << ": block " << b << ", sub-tour " << tour << ", norm " << current << ", GSA slope " << rho1 << std::endl;
+         }
          if (tour >= num) {
             return true;
          }
@@ -250,7 +257,8 @@ inline bool lattice::SubDeepBKZ(int start, int end, int b, FLOAT alpha, int gamm
          if (k != h) {
             res = DeepLLL(start, end, j, alpha, gamma);
             if (res != true) {
-               cout << "DeepLLL error in DeepBKZ" << endl;
+               std::cout << "rank " << std::setw(5) << right << solver_id
+                  << ": DeepLLL error in DeepBKZ" << std::endl;
                return false;
             }
          }
@@ -258,10 +266,9 @@ inline bool lattice::SubDeepBKZ(int start, int end, int b, FLOAT alpha, int gamm
       /* for debug */
       if (B(start) < alpha*current*current) {
          current = pow(B(start), 0.5);
-         cout << "Norm = " << current << endl;
-         cout << basis(start) << endl;
-         communicate(shouldAbort);
-         if( shouldAbort ) return true;
+         std::cout << "rank " << std::setw(5) << right << solver_id
+            << ": Norm = " << current << ", " << basis(start) << std::endl;
+         sendSolution();
       }
    }
    return true;
