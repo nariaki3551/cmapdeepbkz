@@ -59,8 +59,9 @@ public:
 	bool Enum(Vec<int> &result, Vec<double> SR, int g, int h);
 
 	/* DeepBKZ.h */
-	bool SubDeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, int num);
+	bool SubDeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, int num, int solver_id=0);
 	bool DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, int abort, int solver_id=0);
+   virtual bool sendSolution(){ return true; }
    virtual bool communicate(bool& shouldAbort){ return true; }
    virtual bool communicateInTour(bool& shouldAbort){ return true; }
 

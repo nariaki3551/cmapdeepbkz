@@ -212,8 +212,8 @@ CMapDeepBkzParaLoadCoordinator::processTagSolverState(
             << receivedLattice->B.transpose()
             << std::endl;
          std::cout << "Replace,Rank," << source << ",Thread," <<  solverState->getThreadId() << ",Time," << paraTimer->getElapsedTime()
-            << ",unupdate," << numOfUnupdateSolverState << ",nShared," << nShared << ",index," << index << std::endl
-            // << receivedLattice->B.transpose()
+            << ",unupdate," << numOfUnupdateSolverState << ",nShared," << nShared << ",index," << index
+            // << std::endl << receivedLattice->B.transpose()
             << std::endl;
 
          // Eigen::VectorXd approxVector(n);

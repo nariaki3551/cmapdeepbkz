@@ -124,6 +124,25 @@ public:
 
 
    ///
+   /// @brief send local incumbent solution to LC
+   /// @return true if it sended the local incumbent solution to LC else false
+   ///
+   bool sendSolution(
+         )
+   {
+      syncBasisToEigen();
+      if( L->B(0) < localBestSqnorm )
+      {
+         localBestSqnorm = L->B(0);
+         ParaCMapLAP::LatticeVector<int> v = L->basis.row(0).template cast<int>();
+         cmapLapParaSolver->sendSolution(v, localBestSqnorm);
+         return true;
+      }
+      return false;
+   }
+
+
+   ///
    /// @brief communicate with LC
    /// @param[out] shouldAbort true if it should abort else false
    /// @return true if it communicated with LC else false
@@ -148,10 +167,19 @@ public:
          cmapLapParaSolver->iReceiveMessages();
       }
 
+      // check to be necessary to send the status
+      if( cmapLapParaSolver->notificationIsNecessary() )
+      {
+         sendStatus();
+      }
+
       // check interrupting
       if( cmapLapParaSolver->isInterrupted() )
       {
          shouldAbort = true;
+         std::cout << "rank " << std::setw(5) << right << rank
+            << ": receive interrupt request from LoadCoordinator"
+            << std::endl;
          return true;
       }
 
@@ -171,19 +199,34 @@ public:
          if( receivedSubLattice.isMoreReducedThan(*L, index) )
          {
             // double startMergeTime = LapTools::Timer::getElapsedTime();
+            double shortestSqnorm = L->B(0);
             L->merge(receivedSubLattice);
+            if( L->B(0) < shortestSqnorm )
+            {
+               if( std::abs(L->B(0) - receivedSubLattice.B(0)) < 1e-8 )
+               {
+                  std::cout << "rank " << std::setw(5) << right << rank
+                     << ": norm update by merging global basis: "
+                     << std::sqrt(L->B(0)) << std::endl;
+               }
+               else if( L->B(0) < receivedSubLattice.B(0) - 1e-8 )
+               {
+                  std::cout << "rank " << std::setw(5) << right << rank
+                     << ": find shorter global vector while merging global basis: "
+                     << std::sqrt(L->B(0)) << std::endl;
+               }
+               else
+               {
+                  std::cerr << "rank " << std::setw(5) << right << rank
+                     << ": ERROR!! merged global basis, but the shortest vector of global basis was not taken into the basis: "
+                     << std::sqrt(L->B(0)) << std::endl;
+               }
+            }
             syncBasisToNTL();
             // this->mergeTime += LapTools::Timer::getElapsedTime() - startMergeTime;
             // updateBestObjectiveValue('U');
          }
       }
-
-      // check to be necessary to send the status
-      if( cmapLapParaSolver->notificationIsNecessary() )
-      {
-         sendStatus();
-      }
-      cmapLapParaSolver->iReceiveMessages();
 
       // this->runningTime += LapTools::Timer::getElapsedTime() - startTime;
 
@@ -199,8 +242,17 @@ public:
          bool &shouldAbort
          )
    {
-      cmapLapParaSolver->iReceiveMessages();
-      shouldAbort &= cmapLapParaSolver->isInterrupted();
+      if( cmapLapParaSolver->iReceiveIsNecessary() )
+      {
+         cmapLapParaSolver->iReceiveMessages();
+         if( cmapLapParaSolver->isInterrupted() )
+         {
+            shouldAbort = true;
+            std::cout << "rank " << std::setw(5) << right << rank
+               << ": receive interrupt request from LoadCoordinator"
+               << std::endl;
+         }
+      }
       return true;
    }
 

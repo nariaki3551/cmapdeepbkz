@@ -633,7 +633,7 @@ std::string outputSimilarityOfBasis(
       s << "," << scores_mean_metric.col(i).mean();
    }
 
-   std::cout << "\r simlarity total " << elapsed() << " sec" << std::endl;
+   // std::cout << "\r simlarity total " << elapsed() << " sec" << std::endl;
    return s.str();
 }
 
