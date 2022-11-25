@@ -226,7 +226,7 @@ CMapLapParaInitiator::init(
    // probname <- saveFileName
    probName = new char[std::strlen(headOfName) + 1]; // メモリ確保
    std::strcpy(probName, headOfName);
-   std::cout << probName << std::endl;
+   std::cout << "*** CMapLap loads " << probFileName << " as problem file ***" << std::endl;
 
    ///
    /// Setup clock type
@@ -234,7 +234,7 @@ CMapLapParaInitiator::init(
    if( paraParams->getRealParamValue(UG::TimeLimit) > 0.0 )
    {
       double timeRemains =  paraParams->getRealParamValue(UG::TimeLimit) - timer->getElapsedTime();
-      std::cout << "The value of MAXTIME is now " << ceil(timeRemains) << std::endl;
+      std::cout << "*** The value of MAXTIME is now " << ceil(timeRemains) << " ***" << std::endl;
    }
 
    if( basisprobname != NULL )
