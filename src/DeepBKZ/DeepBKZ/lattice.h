@@ -14,14 +14,14 @@ using namespace NTL;
 namespace DeepBKZTool
 {
 
-#if 0
+#if 1
 /* fast version */
 typedef int UINT;
 typedef double FLOAT;
-# typedef long double FLOAT;
+// typedef long double FLOAT;
 #endif
 
-#if 1
+#if 0
 /* stable version */
 typedef int UINT;
 typedef long double FLOAT;

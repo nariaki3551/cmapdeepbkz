@@ -33,7 +33,7 @@ inline bool lattice::DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, 
    bool shouldAbort = false;
 
    std::cout << "rank " << std::setw(5) << right << solver_id
-      << ": DeepBKZ-" << b << ", parallel = " << parallel << std::endl;
+      << ": DeepBKZ-" << b << std::endl;
    SetGSO();
    res = DeepLLL(start, end, start+1, alpha, gamma); /* Initial DeepLLL */
    if (res != true) {
@@ -138,6 +138,17 @@ inline bool lattice::DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, 
                return false;
             }
          }
+
+		   /* for debug */
+		   if (B(start) < alpha*current*current) {
+		      time_end = clock();
+		      total = static_cast<double>(time_end - time_start) / CLOCKS_PER_SEC;
+		      current = pow(B(start), 0.5);
+		      std::cout << "rank " << std::setw(5) << right << solver_id
+		         << ": Time " << total << ", Norm = " << current << ", " << basis(start) << std::endl;
+		      sendSolution();
+		   }
+
 #if 0
          if (h < end) {
          // if (end-j > 70) {
@@ -210,10 +221,10 @@ inline bool lattice::SubDeepBKZ(int start, int end, int b, FLOAT alpha, int gamm
 
       if (j == end-1) {
          j = start-1; ++tour;
-         if (tour % 50 == 0) {
-            std::cout << "rank " << std::setw(5) << right <<
-               solver_id << ": block " << b << ", sub-tour " << tour << ", norm " << current << ", GSA slope " << rho1 << std::endl;
-         }
+         // if (tour % 50 == 0) {
+         //    std::cout << "rank " << std::setw(5) << right <<
+         //       solver_id << ": block " << b << ", sub-tour " << tour << ", norm " << current << ", GSA slope " << rho1 << std::endl;
+         // }
          if (tour >= num) {
             return true;
          }
@@ -263,6 +274,7 @@ inline bool lattice::SubDeepBKZ(int start, int end, int b, FLOAT alpha, int gamm
             }
          }
       }
+#if 0
       /* for debug */
       if (B(start) < alpha*current*current) {
          current = pow(B(start), 0.5);
@@ -270,6 +282,7 @@ inline bool lattice::SubDeepBKZ(int start, int end, int b, FLOAT alpha, int gamm
             << ": Norm = " << current << ", " << basis(start) << std::endl;
          sendSolution();
       }
+#endif
    }
    return true;
 }
