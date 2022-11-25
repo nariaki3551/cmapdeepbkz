@@ -78,9 +78,11 @@ CMapLapParaCheckpointWriter::run(
       )
 {
    std::cout
+      << "*** "
+      << "Time "
       << paraTimer->getElapsedTime()
-      << " CMapLapParaCheckpointWriter "
-      << " start "
+      << " CMapLapParaCheckpointWriter"
+      << " start"
       << std::endl;
 
    for(;;)
@@ -93,6 +95,8 @@ CMapLapParaCheckpointWriter::run(
       {
          localComm->receive( NULL, 0, UG::ParaBYTE, 0, tag );
          std::cout
+            << "*** "
+            << "Time "
             << paraTimer->getElapsedTime()
             << " CMapLapParaCheckpointWriter::run"
             << " receive UG::TagTerminateRequest from LC "
@@ -105,6 +109,8 @@ CMapLapParaCheckpointWriter::run(
          localComm->uTypeReceive(
                (void **)&checkpointElement, ParaCheckpointElementType, 0, UG::TagTask);
          std::cout
+            << "*** "
+            << "Time "
             << paraTimer->getElapsedTime()
             << " CMapLapParaCheckpointWriter::run"
             << " receive currentCheckpointElement "
@@ -119,6 +125,8 @@ CMapLapParaCheckpointWriter::run(
    }
    localComm->send( NULL, 0, UG::ParaBYTE, 0, UG::TagTerminated );  // destination is LC ( 0 )
    std::cout
+      << "*** "
+      << "Time "
       << paraTimer->getElapsedTime()
       << " CMapLapParaCheckpointWriter::run"
       << " send UG::TagTerminated to LC "
@@ -156,16 +164,6 @@ CMapLapParaCheckpointWriter::updateCheckpointFiles(
       if( timeStr[i] == '\n' ) timeStr[i] = '\0';
    }
    char *newCheckpointTimeStr = &timeStr[4];    // remove a day of the week
-
-
-   std::cout
-      << paraTimer->getElapsedTime()
-      << " CMapLapParaCheckpointWriter::updateCheckpointFiles"
-      << " probName " << checkpointElement->probName
-      << " lastCheckpointTimeStr " << checkpointElement->lastCheckpointTimeStr
-      << " newCheckpointTimeStr  " << newCheckpointTimeStr
-      << std::endl;
-
 
    if( strcmp(newCheckpointTimeStr, checkpointElement->lastCheckpointTimeStr) == 0 )
    {
@@ -359,9 +357,11 @@ CMapLapParaCheckpointWriter::updateCheckpointFiles(
    checkpointElement->setLastCheckpointTimeStr(newCheckpointTimeStr);
 
    std::cout
+      << "*** "
+      << "Time "
       << paraTimer->getElapsedTime()
       << " CMapLapParaCheckpointWriter::updateCheckpointFiles"
-      << " finish "
+      << " finish"
       << " lastCheckpointTimeStr <- "
       << checkpointElement->lastCheckpointTimeStr
       << std::endl;

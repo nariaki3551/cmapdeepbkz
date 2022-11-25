@@ -124,6 +124,11 @@ CMapLapParaLoadCoordinator::CMapLapParaLoadCoordinator(
    if( lowerBoundOfNorm > 0.0 )
    {
       globalLowerBoundOfSquaredNorm = lowerBoundOfNorm * lowerBoundOfNorm;
+      std::cout
+         << "*** "
+         << "CMapLap sets globalLowerBoundOfSquaredNorm to " << globalLowerBoundOfSquaredNorm
+         << " ***"
+         << std::endl;
    }
    double lowerBoundOfApproxFactor = paraParams->getRealParamValue(LowerBoundOfApproxFactor);
    if( lowerBoundOfApproxFactor > 0.0 )
@@ -140,7 +145,12 @@ CMapLapParaLoadCoordinator::CMapLapParaLoadCoordinator(
                lowerBoundOfNorm * lowerBoundOfNorm
                );
       }
-      std::cout << "*** set globalLowerBoundOfSquaredNorm = " << globalLowerBoundOfSquaredNorm << " ***" << std::endl;
+      std::cout
+         << "*** "
+         << "CMapLap sets globalLowerBoundOfSquaredNorm to " << globalLowerBoundOfSquaredNorm
+         << " from lowerBoundOfApproxFactor " << lowerBoundOfApproxFactor
+         << " ***"
+         << std::endl;
    }
 
    ///
@@ -1715,6 +1725,7 @@ CMapLapParaLoadCoordinator::run(
 
    double previousLogShareDataPoolTime = 0.0;
    double previousOutputSimilarityOfBasisTime = 0.0;
+   double previousLoadCoordinatorStatisticsStdoutTime = 0.0;
    double nextOutputLctsStatTime = paraTimer->getElapsedTime();
 
    // for adjust solver's notification interval
@@ -1869,6 +1880,36 @@ CMapLapParaLoadCoordinator::run(
          lcts.resetLocalProcessTimesOfMessageHandler();
          previousTermUpdateNotificationIntervalTime = paraTimer->getElapsedTime();
       }
+      else if( paraTimer->getElapsedTime() - previousLoadCoordinatorStatisticsStdoutTime > 600 )
+      {
+         std::cout
+            << "***"
+            << " LoadCoordinator Statistics"
+            << " Time " << previousLoadCoordinatorStatisticsStdoutTime << " - " << paraTimer->getElapsedTime()
+            << " ***"
+            << std::endl;
+         double termTime = paraTimer->getElapsedTime() - previousLoadCoordinatorStatisticsStdoutTime;
+         double idleRatio = 1.0 - lcts.totalLocalProcessTimesOfMessageHandler() / termTime;
+         std::cout
+            << "***    "
+            << " LoadCoordinator Idle Ratio " << idleRatio
+            << " ***"
+            << std::endl;
+         std::cout
+            << "***    "
+            << " LoadCoordinator handled " << lcts.localProcessCallsOfMessageHandler[UG::TagSolverState]
+            << " solver statuses"
+            << " ***"
+            << std::endl;
+         std::cout
+            << "***    "
+            << " LoadCoordinator handled " << lcts.localProcessCallsOfMessageHandler[UG::TagSolution]
+            << " solutions"
+            << " ***"
+            << std::endl;
+         lcts.resetLocalProcessTimesOfMessageHandler();
+         previousLoadCoordinatorStatisticsStdoutTime = paraTimer->getElapsedTime();
+      }
    }
 
    // send terminate request to CheckpointWriter
@@ -1934,15 +1975,40 @@ CMapLapParaLoadCoordinator::updateNotificationInterval(
    {
       return;
    }
+   std::cout
+      << "***"
+      << " LoadCoordinator Statistics "
+      << " Term at " << paraTimer->getElapsedTime()
+      << " ***"
+      << std::endl;
+   std::cout
+      << "***    "
+      << " LoadCoordinator Idle Ratio " << idleRatio
+      << " ***"
+      << std::endl;
+   std::cout
+      << "***    "
+      << " LoadCoordinator handled " << lcts.localProcessCallsOfMessageHandler[UG::TagSolverState]
+      << " solver statuses"
+      << " ***"
+      << std::endl;
+   std::cout
+      << "***    "
+      << " LoadCoordinator handled " << lcts.localProcessCallsOfMessageHandler[UG::TagSolution]
+      << " solutions"
+      << " ***"
+      << std::endl;
    if( idleRatio < paraParams->getRealParamValue(LCLowerIdleRatio) )
    {
       double target = paraParams->getRealParamValue(LCUpperIdleRatio) * 0.99;
       std::cout
-         << "Term at "     << paraTimer->getElapsedTime()
+         << "***"
+         << " Term at "     << paraTimer->getElapsedTime()
          << " idle ratio " << idleRatio << " <"
          << " lower "      << paraParams->getRealParamValue(LCLowerIdleRatio)
          << " : Change notification interval "
          << notificationInterval << " -> " << notificationInterval * std::min(target / idleRatio, 2.0)
+         << " ***"
          << std::endl;
       leftNotificationInterval = notificationInterval;
       notificationInterval *= std::min(target / idleRatio, 2.0);
@@ -1957,11 +2023,13 @@ CMapLapParaLoadCoordinator::updateNotificationInterval(
       if( diff > 1 )
       {
          std::cout
+            << "*** "
             << "Term at "     << paraTimer->getElapsedTime()
             << " idle ratio " << idleRatio << " >"
             << " upper "      << paraParams->getRealParamValue(LCUpperIdleRatio)
             << " : Change notification interval "
             << notificationInterval << " -> " << notificationInterval - diff
+            << " ***"
             << std::endl;
          notificationInterval -= diff;
          for(int i = 1; i < paraComm->getSize(); i++ )
@@ -2055,9 +2123,12 @@ CMapLapParaLoadCoordinator::~CMapLapParaLoadCoordinator(
       }
       assert( checkpointTag == UG::TagTerminated );
       std::cout
+         << "*** "
+         << "Time "
          << paraTimer->getElapsedTime()
          << " CMapLapParaLoadCoordinator::deconstructor"
          << " receive " << checkpointTag << " from CheckpointWriter "
+         << " ***"
          << std::endl;
    }
 
@@ -2269,9 +2340,12 @@ CMapLapParaLoadCoordinator::updateCheckpointFiles(
       {
          assert( currentCheckpointElement );
          std::cout
+            << "*** "
+            << "Time "
             << paraTimer->getElapsedTime()
             << " CMapLapParaLoadCoordinator::updateCheckpointFiles"
             << " send currentCheckpointElement "
+            << " ***"
             << std::endl;
          lcCheckpointComm->uTypeSend(
                (void *)currentCheckpointElement.get(),
@@ -2303,8 +2377,6 @@ CMapLapParaLoadCoordinator::updateCheckpointFiles(
       if( timeStr[i] == '\n' ) timeStr[i] = '\0';
    }
    char *newCheckpointTimeStr = &timeStr[4];    // remove a day of the week
-   // std::cout << "lstCheckpointTimeStr = " << lastCheckpointTimeStr << std::endl;
-   // std::cout << "newCheckpointTimeStr = " << newCheckpointTimeStr << std::endl;
    if( strcmp(newCheckpointTimeStr,lastCheckpointTimeStr) == 0 )
    {
       int l = strlen(newCheckpointTimeStr);
@@ -2538,7 +2610,11 @@ CMapLapParaLoadCoordinator::warmStart(
          strs << shortestNorm;
          cmapLapParaInitiator->writeSolution("[Warm started from "+std::string(cmapLapParaInitiator->getPrefixWarm())+" : the solution "+strs.str()+" from the checkpoint file]");
       }
-      std::cout << "CMapLapParaLoadCoordinator::warmStart load solution " << shortestNorm << " from after checkpoint solution " << afterCheckpointingSolutionFileName << std::endl;
+      std::cout
+         << "*** "
+         << "CMapLapParaLoadCoordinator::warmStart load solution " << shortestNorm << " from after checkpoint solution " << afterCheckpointingSolutionFileName
+         << " ***"
+         << std::endl;
    }
    else
    {
@@ -2553,7 +2629,11 @@ CMapLapParaLoadCoordinator::warmStart(
       checkpointSolutionStream.open(solutionFileName, std::ios::in | std::ios::binary);
       if( !checkpointSolutionStream )
       {
-         std::cout << "Checkpoint file for solution cannot open. file name = " << solutionFileName << std::endl;
+         std::cout
+            << "*** "
+            << "Checkpoint file for solution cannot open. file name = " << solutionFileName
+            << " ***"
+            << std::endl;
          exit(1);
       }
       double shortestNorm = paraInitiator->readSolutionFromCheckpointFile(solutionFileName);
@@ -2563,7 +2643,11 @@ CMapLapParaLoadCoordinator::warmStart(
          strs << shortestNorm;
          cmapLapParaInitiator->writeSolution("[Warm started from "+std::string(cmapLapParaInitiator->getPrefixWarm())+" : the solution "+strs.str()+" from the checkpoint file]");
       }
-      std::cout << "CMapLapParaLoadCoordinator::warmStart load solution " << shortestNorm << " from checkpoint solution " << solutionFileName << std::endl;
+      std::cout
+         << "*** "
+         << "CMapLapParaLoadCoordinator::warmStart load solution " << shortestNorm << " from checkpoint solution " << solutionFileName
+         << " ***"
+         << std::endl;
       checkpointSolutionStream.close();
    }
    afterCheckpointingSolutionStream.close();
@@ -2612,7 +2696,11 @@ CMapLapParaLoadCoordinator::warmStart(
             THROW_LOGICAL_ERROR2("CMapLapParaLoadCoordinator::warmStart: Invalid solver type = ", static_cast<int>(paraTask->getSolverType()));
          }
       }
-      std::cout << "CMapLapParaLoadCoordinator::warmStart: Invalid solver type warning is no problem during warm start. " << std::endl;
+      std::cout
+         << "*** "
+         << "CMapLapParaLoadCoordinator::warmStart: Invalid solver type warning is no problem during warm start."
+         << " ***"
+         << std::endl;
       if( logSolvingStatusFlag )
       {
          *osLogSolvingStatus << "warmStart read "
