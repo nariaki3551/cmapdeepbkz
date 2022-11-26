@@ -95,48 +95,12 @@ def gen_test_list(args):
         binary = "./bin/fcmapdeepbkz"
         appendix_setting_files_list = [
             (
-                "thread -- All DeepBKZ",
-                "algo_assign.all_deepbkz.set deepbkz.set"
-            ),
-            (
-                "thread -- Small share data pool",
-                "algo_assign.all_deepbkz.set deepbkz.set small_share_data_pool.set"
-            ),
-            (
-                "thread -- Small instance pool",
-                "algo_assign.all_deepbkz.set deepbkz.set small_instance_pool.set"
-            ),
-            (
-                "thread -- No checkpoint threading",
-                "algo_assign.all_deepbkz.set deepbkz.set no_checkpoint_threading.set"
-            ),
-            (
-                "thread -- No shared incumbent vector",
-                "algo_assign.all_deepbkz.set deepbkz.set no_share_incumbent.set"
-            ),
-            (
-                "thread -- logging many data",
-                "algo_assign.all_deepbkz.set deepbkz.set log_verbose.set"
-            ),
-            (
-                "thread -- auto adjustment notification interval",
-                "algo_assign.all_deepbkz.set deepbkz.set auto_adjustment_notification.set"
-            ),
-            (
-                "thread -- no checkpint reserving",
-                "algo_assign.all_deepbkz.set deepbkz.set no_checkpint_reserving.set"
-            ),
-            (
-                "thread -- small message queue in solver",
-                "algo_assign.all_deepbkz.set deepbkz.set small_message_queue.set"
-            ),
-            (
-                "thread -- small randomize",
-                "algo_assign.all_deepbkz.set deepbkz.set small_randomize_rows.set"
+                "thread -- normal",
+                ""
             ),
             (
                 "thread -- with lower bound of approximated factor",
-                "algo_assign.all_deepbkz.set deepbkz.set loweralpha.set"
+                "loweralpha.set"
             )
         ]
 
@@ -157,49 +121,13 @@ def gen_test_list(args):
         binary = "./bin/paracmapdeepbkz"
         appendix_setting_files_list = [
             (
-                "mpi -- All DeepBKZ",
-                "algo_assign.all_deepbkz.set deepbkz.set"
+                "mpi -- noamal",
+                ""
             ),
             (
-                "mpi -- Small share data pool",
-                "algo_assign.all_deepbkz.set deepbkz.set small_share_data_pool.set"
+                "mpi-- with lower bound of approximated factor",
+                "loweralpha.set"
             ),
-            (
-                "mpi -- Small instance pool",
-                "algo_assign.all_deepbkz.set deepbkz.set small_instance_pool.set"
-            ),
-            (
-                "mpi -- No checkpoint threading",
-                "algo_assign.all_deepbkz.set deepbkz.set no_checkpoint_threading.set"
-            ),
-            (
-                "mpi -- No shared incumbent vector",
-                "algo_assign.all_deepbkz.set deepbkz.set no_share_incumbent.set"
-            ),
-            (
-                "mpi -- logging many data",
-                "algo_assign.all_deepbkz.set deepbkz.set log_verbose.set"
-            ),
-            (
-                "mpi -- auto adjustment notification interval",
-                "algo_assign.all_deepbkz.set deepbkz.set auto_adjustment_notification.set"
-            ),
-            (
-                "mpi -- no checkpint reserving",
-                "algo_assign.all_deepbkz.set deepbkz.set no_checkpint_reserving.set"
-            ),
-            (
-                "mpi -- small message queue in solver",
-                "algo_assign.all_deepbkz.set deepbkz.set small_message_queue.set"
-            ),
-            (
-                "mpi -- small randomize",
-                "algo_assign.all_deepbkz.set deepbkz.set small_randomize_rows.set"
-            ),
-            (
-                "mpi -- with lower bound of approximated factor",
-                "algo_assign.all_deepbkz.set deepbkz.set loweralpha.set"
-            )
         ]
         for test_name, appendix_setting_files in appendix_setting_files_list:
             num_setting_files = len(base_setting_files.split()) + len(appendix_setting_files.split())
