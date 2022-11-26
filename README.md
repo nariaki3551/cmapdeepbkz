@@ -1,6 +1,6 @@
 # CMAP-DeepBKZ
 
-CMAP-DeepBKZ solver \[[Tat+21b](#ref.cmapdeepbkz)\] that is a configuration for parallelizing lattice-based reduction based on CMAP-LAP \[[Tat+21a](#ref.cmaplap)\]. CMAP-LAP is a C++ & MPI parallel framework for the lattice problems \[[Tat+21a](#ref.cmaplap)\].
+CMAP-DeepBKZ solver \[[Tat+21b](#ref.cmapdeepbkz)\] that is a configuration for parallelizing lattice-based reduction based on CMAP-LAP \[[Tat+21a](#ref.cmaplap)\]. CMAP-LAP is a C++ & MPI parallel framework for the lattice problems.
 
 These frameworks and solvers are distributed under the LGPL version 3 or later, in accordance with the license of the UG framework. Commercial licenses are available through <licenses@zib.de>.
 In addition, some programs independent of the UG framework are distributed under the MIT License.
@@ -71,7 +71,7 @@ wget https://boostorg.jfrog.io/artifactory/main/release/1.75.0/source/boost_1_75
 tar -xf boost_1_75_0.tar.gz
 ```
 
-In the case that you install these libraries in your local, it is recommended to create a cmaplap/usr directory and specify cmaplap/usr in the PREFIX above.
+In the case that you install these libraries in your local, it is recommended to create a cmapdeepbkz/usr directory and specify cmapdeepbkz/usr in the PREFIX above.
 
 <br>
 
@@ -82,7 +82,7 @@ The binaries will be created in `DeepBKZ/bin`.
 ```bash
 mkdir build
 cd build
-cmake .. (options)
+cmake .. (options) -DBOOST_DIR=(boost installed directory)/boost_1_75_0
 make
 ```
 
@@ -128,7 +128,7 @@ All workers execute lattice basis reduction, and a supervisor shares a part of a
 
 `./bin/fcmapdeepbkz settingfile matrixfile -sth yy` (e.g. `./bin/fcmapdeepbkz settings/default.set storage/sample_mats/dim80.txt -sth 3`)
 
-matrixfile is the basis file in the same format as the SVP Challenge instance. 
+matrixfile is the basis file in the same format as the SVP Challenge instance.
 
 **options**
 
@@ -145,7 +145,7 @@ matrixfile is the basis file in the same format as the SVP Challenge instance.
 
 ## Sequential version (test for DeepBKZ algorithms)
 
-`./bin/seqcmaplap -i (instance file) -a exdeepbkz -b (blocksize)` (e.g. `./bin/seqcmaplap -i ./storage/sample_mats/dim80.txt -a exdeepbkz -b 30`)
+`./bin/seqcmapdeepbkz -i (instance file) -a exdeepbkz -b (blocksize)` (e.g. `./bin/seqcmapdeepbkz -i ./storage/sample_mats/dim80.txt -a exdeepbkz -b 30`)
 
 <br>
 
