@@ -84,6 +84,7 @@ DeepBkz<BasisFloat, GSFloat, EnumGSFloat>::deepbkz(
    // main-loop
    double nextLogTime = runningTime + this->config.LogIntervalDeepBkz;
    bool shouldAbort = false;
+   bool ret = true;
    while( !hasReduced )
    {
       if( timeLimit > 0 && runningTime > timeLimit ){ break; }
@@ -91,11 +92,11 @@ DeepBkz<BasisFloat, GSFloat, EnumGSFloat>::deepbkz(
       communicate(shouldAbort);
       if( shouldAbort ) { break; }
 
-      preprocess(shouldAbort);
-      if( shouldAbort ) { break; }
+      ret = preprocess(shouldAbort);
+      if( !ret & shouldAbort ) { break; }
 
-      tour(shouldAbort);
-      if( shouldAbort ) { break; }
+      ret = tour(shouldAbort);
+      if( !ret & shouldAbort ) { break; }
 
       if( nextLogTime < runningTime )
       {
@@ -105,13 +106,14 @@ DeepBkz<BasisFloat, GSFloat, EnumGSFloat>::deepbkz(
    }
 
    outputLog('E');
-   return true;
+   return ret;
 }
 
 
 ///
 /// @brief preprocess of DeepBkz main loop
 /// @param[out] shouldAbort true if it should abort else false
+/// @return bool true: normal termination, false: abnormal termination
 ///
 template<typename BasisFloat, typename GSFloat, typename EnumGSFloat>
 bool
@@ -122,11 +124,12 @@ DeepBkz<BasisFloat, GSFloat, EnumGSFloat>::preprocess(
    double startTime = Timer::getElapsedTime();
    lllObj.setVerbose(verbose);
    lllObj.setOsCsvLog(osCsvLog);
-   lllObj.deeplll();
+   bool ret = lllObj.deeplll();
    lllObj.setVerbose(0);
    lllObj.setOsCsvLog(nullptr);
    runningTime += Timer::getElapsedTime() - startTime;
    updateBestObjectiveValue('*');
+   if( !ret ) return false;
    return true;
 }
 
@@ -134,6 +137,7 @@ DeepBkz<BasisFloat, GSFloat, EnumGSFloat>::preprocess(
 ///
 /// @brief run tour
 /// @param[out] shouldAbort true if it should abort else false
+/// @return bool true: normal terminate, false: abnormal one
 /// @remark runningTime is updated in this function
 /// @remark autoAborted is updaetd in this function
 /// @remark If lowerBound is positive value, wheh it founds the lattice vector whose norm is less than lowerBound
@@ -147,6 +151,7 @@ DeepBkz<BasisFloat, GSFloat, EnumGSFloat>::tour(
    int begin = 0, end = L->m - 1;
    double startTime = Timer::getElapsedTime();
    bool fullTour = true;
+   bool enumSuccess = true;
    shouldAbort = false;
    nTour++;
 
@@ -157,7 +162,8 @@ DeepBkz<BasisFloat, GSFloat, EnumGSFloat>::tour(
    communicateInTour(shouldAbort);
    for( ; k < end && !shouldAbort; k++ )
    {
-      bool enumSuccess = step(k, z, shouldAbort);
+      bool ret = step(k, z, enumSuccess, shouldAbort);
+      if( !ret ) return false;
       if( !fullTour && enumSuccess ){ break; }
       communicateInTour(shouldAbort);
       if( lowerBound > 0 && L->shortestNorm() < lowerBound ){ shouldAbort = true; }
@@ -195,6 +201,7 @@ DeepBkz<BasisFloat, GSFloat, EnumGSFloat>::tour(
 /// @brief one loop of algorithm
 /// @param[in] k
 /// @param[out] z
+/// @param[out] enumSuccess true if enumeration process was successed else false
 /// @param[out] shouldAbort true if it should abort else false
 /// @return bool return true if enumeration process is successed else false
 ///
@@ -203,6 +210,7 @@ bool
 DeepBkz<BasisFloat, GSFloat, EnumGSFloat>::step(
       int k,
       int &z,
+      bool &enumSuccess,
       bool &shouldAbort
       )
 {
@@ -216,25 +224,26 @@ DeepBkz<BasisFloat, GSFloat, EnumGSFloat>::step(
 
    // sub-SVP
    enumObj.init(k, l, -1, (timeLimit > 0 ? timeLimit-runningTime : -1));
-   bool enumSuccess = enumObj.projectedEnum(v, coeffv);
+   enumSuccess = enumObj.projectedEnum(v, coeffv);
 
    // insert
    if( enumSuccess ){ postProcess(k, l); }
 
    // reduction for next sub-SVP
+   bool ret = true;
    if( enumSuccess )
    {
-      lllObj.deeplll(k, begin, h);
+      ret = lllObj.deeplll(k, begin, h);
       z = 0;
    }
    else
    {
-      lllObj.deeplll(h-1, begin, h);
+      ret = lllObj.deeplll(h-1, begin, h);
       z++;
    }
 
    updateBestObjectiveValue('*');
-   return enumSuccess;
+   return ret;
 }
 
 

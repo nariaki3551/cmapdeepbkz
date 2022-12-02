@@ -363,9 +363,8 @@ CMapDeepBkzParaSolver::runDeepBkz(
    }
 
 
-   // Notification message has to complete
+   // post process
    if( notificationProcessed ){ waitNotificationIdMessage(); }
-
    sendDeepBkzCalculationState(
          L->basis,
          blocksize,
@@ -393,6 +392,12 @@ CMapDeepBkzParaSolver::runExDeepBkz(
    config.Quiet = ( verbose == 0 );
    L->setConfig(config);
 
+   auto postprocess = [&L, this]
+   {
+      if( notificationProcessed ){ waitNotificationIdMessage(); }
+      sendDeepBkzCalculationState(L->basis, -1, -1, -1);
+   };
+
    // randomize basis
    int begin = 0, end = L->m - 1;
    int randomizeSize = cmapLapParaTask->getU();
@@ -400,10 +405,18 @@ CMapDeepBkzParaSolver::runExDeepBkz(
    if( begin < 0 ){ begin = 0; }
    L->randomize(cmapLapParaTask->getSeed(), begin, end);
 
+   bool ret = true;
+
    // LLL reduction
-   CmapDeepBkz<int, double, double> lllObj{
-      L, this, getRank(), getThreadId(), 0, false};
-   lllObj.deeplll();
+   LapTools::Reduction<int, double> ntlObj{L, getRank(), getThreadId(), 0};
+   std::cout << "rank " << std::setw(5) << right << getRank() << ": NTL::LLL start" << std::endl;
+   ret = ntlObj.lll();     if( !ret ){ postprocess(); return; }
+   std::cout << "rank " << std::setw(5) << right << getRank() << ": NTL::BKZ20 start" << std::endl;
+   ret = ntlObj.bkz(20);   if( !ret ){ postprocess(); return; }
+
+   // DeepLLL reduction
+   CmapDeepBkz<int, double, double> lllObj{L, this, getRank(), getThreadId(), 0, false};
+   ret = lllObj.deeplll(); if( !ret ){ postprocess(); return; }
 
    // create DeepBkz object
    bool mergeBasisFromLC = ( paraParams->getIntParamValue(DimensionOfSharedLattice) > 0 );
@@ -424,18 +437,8 @@ CMapDeepBkzParaSolver::runExDeepBkz(
       reductionObj.DeepBKZ(_start, _end, blocksize, alpha, gamma, abort, getRank());
    }
 
-   // Notification message has to complete
-   if( notificationProcessed ){ waitNotificationIdMessage(); }
-
    reductionObj.syncBasisToEigen();
-   sendDeepBkzCalculationState(
-         L->basis,
-         blocksize,
-         -1,
-         -1
-         // reductionObj.getNTour(),
-         // reductionObj.getRunningTime()
-         );
+   postprocess();
 }
 
 

@@ -32,13 +32,14 @@ DeepLLL (with deep insertion restriction)
 - Input
 	int start		: start index
 	int end			: end index
-	int h			: deep start index
+	int h	   		: deep start index
 	FLOAT alpha		: reduction parameter
 	int gamma		: insertion restriction parameter
+   int solver_id  : solver identification number
 - Output 
 DeepLLL-reduced basis
 ******************************************************/
-inline bool lattice::DeepLLL(int start, int end, int h, FLOAT alpha, int gamma) 
+inline bool lattice::DeepLLL(int start, int end, int h, FLOAT alpha, int gamma, int solver_id)
 {
 	int k = h, i, j, l, s, t, flag, n = NumRows;
 	int ii, t_1, s_1;
@@ -50,7 +51,8 @@ inline bool lattice::DeepLLL(int start, int end, int h, FLOAT alpha, int gamma)
 		
 		res = InnerProduct(tmp, basis(k), basis(k));
 		if (res == false) {
-			cout << "InnerProduct error in DeepLLL" << endl; 
+         std::cout << "rank " << std::setw(5) << right << solver_id
+            << ": InnerProduct error in DeepLLL" << std::endl;
 			return false; 
 		}
 		i = 1; flag = 0;
