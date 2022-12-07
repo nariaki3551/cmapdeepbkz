@@ -57,7 +57,7 @@ namespace LapTools
 /// @param[in] start index of basis
 /// @param[in] begin index of basis
 /// @param[in] end   index of basis
-/// @return bool true: normal terminate, false: abnormal one
+/// @return bool true: normal termination, false: abnormal termination
 ///
 template<typename BasisFloat, typename GSFloat>
 bool
@@ -101,7 +101,7 @@ DeepLll<BasisFloat, GSFloat>::deeplll(
             {
                basis->row(j).swap(basis->row(j-1));
             }
-            GSOUpdateDeepLll(i, k);
+            if( !GSOUpdateDeepLll(i, k) ) return false;
             if( i == 0 )
             {
                runningTime = Timer::getElapsedTime() - startTime;
@@ -183,7 +183,8 @@ DeepLll<BasisFloat, GSFloat>::GSOUpdateDeepLll(
 
    if( B->coeff(i) >= tmp0 )
    {
-      std::cout << "Insertion error at index " << i << " in DeepLll::GSOUpdateDeepLll" << std::endl;
+      std::cout << "Rank " << rank << " Thread " << threadId
+         << " Insertion error at index " << i << " in DeepLll::GSOUpdateDeepLll" << std::endl;
       L->setGSO(0, L->m-1);
       return false;
    }

@@ -251,6 +251,7 @@ public:
    ///
    /// @brief run tour
    /// @param[out] shouldAbort true if it should abort else false
+   /// @return bool true: normal terminate, false: abnormal one
    /// @remark runningTime is updated in this function
    /// @remark autoAborted is updaetd in this function
    /// @remark If lowerBound is positive value, wheh it founds the lattice vector whose norm is less than lowerBound
@@ -264,12 +265,14 @@ public:
    /// @brief one loop of algorithm
    /// @param[in] k
    /// @param[out] z
+   /// @param[out] enumSuccess true if enumeration process was successed else false
    /// @param[out] shouldAbort true if it should abort else false
    /// @return bool true: normal terminate, false: abnormal one
    ///
    virtual bool step(
          int k,
          int &z,
+         bool &enumSuccess,
          bool &shouldAbort
          );
 

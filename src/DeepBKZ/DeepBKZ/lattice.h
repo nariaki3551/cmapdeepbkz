@@ -53,7 +53,7 @@ public:
 
 	/* DeepLLL.h */
 	void size_reduce(int k);
-	bool DeepLLL(int start, int end, int h, FLOAT alpha, int gamma);
+	bool DeepLLL(int start, int end, int h, FLOAT alpha, int gamma, int solver_id=0);
 
 	/* Enum.h */
 	bool Enum(Vec<int> &result, Vec<double> SR, int g, int h);
