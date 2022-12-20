@@ -71,8 +71,9 @@ inline bool lattice::DeepLLL(int start, int end, int h, FLOAT alpha, int gamma, 
 				/* Deep insertion at (i, k) */
 				tmpp = basis(k);
 				for (t=k; t>i; --t) { basis(t) = basis(t-1); }
-				basis(i) = tmpp; 
-				
+				basis(i) = tmpp;
+				tmp = B(i);
+
 				/* (Efficient) GSO update after deep insertion */
 				if ( flag == 1 ) {
 					D(k) = B(k);
@@ -87,7 +88,11 @@ inline bool lattice::DeepLLL(int start, int end, int h, FLOAT alpha, int gamma, 
 						B(l + 1) = D(l + 1) * B(l) * DD(l);
 					}
 					B(i) = D(i);
-					
+					if (B(i) >= tmp) {
+                  std::cout << "rank " << std::setw(5) << right << solver_id
+                     << ": DeepLLL GSO update error" << std::endl;
+					}
+
 					t_1 = k - 1;
 					tmp1 = mu(k, t_1) * DD(k);
 					for (s = k + 1; s <= n; ++s) {

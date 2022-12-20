@@ -54,7 +54,8 @@ inline bool lattice::DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, 
       if (shouldAbort) return true;
 
       if (j == end-1) {
-         j = start-1; ++tour;
+         j = start-1;
+         ++tour;
          GSA_slope(rho1, start, end);
          if (tour % 1 == 0) {
             std::cout << "rank " << std::setw(5) << right << solver_id
@@ -62,7 +63,7 @@ inline bool lattice::DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, 
          }
          /* Early termination */
          if (abort != 0) {
-            if (fabs(rho) < fabs(rho1)) {
+            if (0.999*fabs(rho) < fabs(rho1)) {
                ++N;
                if (N >= abort) {
                   time_end = clock();
@@ -81,6 +82,7 @@ inline bool lattice::DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, 
          if (shouldAbort) return true;
       }
       ++j; k = min(j+b-1, end); h = min(k+1, end);
+	  // ++j; k = min(j+min(b+j, 70)-1, end); h = min(k+1, end);
 
       /* Conversion to NTL */
       for (ii=1; ii<=n; ++ii) {
@@ -88,12 +90,11 @@ inline bool lattice::DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, 
             LL(ii, jj) = basis(ii, jj);
          }
       }
-      BB = LL;
-      BB.updateGSBasis();
+      BB = LL; BB.updateGSBasis();
 
       /* Enumeration */
       radius = pow(alpha*B(j), 0.50); prob = 1.0;
-      if (k-j+1 > 45) { prob = 4.0/pow(1.05, k-j+1); }
+      if (k-j+1 > 45) { prob = 5.0/pow(1.05, k-j+1); }
       VV = ENUM(BB, radius, prob, enum_mode_find_shortest, 0, VL0, "istart="+to_stdstring(j) + " iend=" + to_stdstring(k) + "parallel=" + to_stdstring(parallel));
 
       /* Enumerate projected shortest vector */
@@ -127,8 +128,9 @@ inline bool lattice::DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, 
 
          /* DeepLLL after insertion of short lattice vector */
          SetGSO();
-         if (k != h) {
-            if (b < 40) {
+         // if (k != h) {
+         if (end - j > 44) {
+            if (b < 45) {
                res = DeepLLL(start, end, j, alpha, gamma);
             } else {
                res = SubDeepBKZ(start, end, roundf(b/2.0), 0.99, gamma, 5*b, solver_id);
@@ -148,18 +150,6 @@ inline bool lattice::DeepBKZ(int start, int end, int b, FLOAT alpha, int gamma, 
 		         << ": Time " << total << ", Norm = " << current << ", " << basis(start) << std::endl;
 		      sendSolution();
 		   }
-
-#if 0
-         if (h < end) {
-         // if (end-j > 70) {
-            // res = DualDeepBKZ(25, 0.99, j+1, end, n, 5);
-            res = DualDeepLLL(0.99, j+1, end, end-1, 20);
-            if (res != true) {
-               cout << "DualDeepBKZ error in DeepBKZ" << endl;
-               return false;
-            }
-         }
-#endif
       }
       time_end1 = clock();
       time += static_cast<double>(time_end1 - time_start1)/CLOCKS_PER_SEC;
