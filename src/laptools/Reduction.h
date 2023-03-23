@@ -143,7 +143,8 @@ public:
    /// @param[in] beta blocksize
    ///
    virtual bool bkz(
-         int beta
+         int beta,
+         long prune=0
        );
 
 

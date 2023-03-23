@@ -40,6 +40,7 @@
 #include <assert.h>
 #include <float.h>
 #include <memory>
+#include <iomanip>
 #include "NTL/LLL.h"
 #include "NTL/ZZ.h"
 #include "NTL/matrix.h"
@@ -743,7 +744,8 @@ Lattice<BasisFloat, GSFloat>::insertMlll(
    for( i = k; i <= l; i++ )
       for( ii = 0; ii < n; ++ii ){ Mbasis[i+1-j][ii] = basis(i,ii); }
 
-   NTL::LLL_FP(Mbasis,config.MLLLdelta,0,0,0);
+   // NTL::LLL_FP(Mbasis,config.MLLLdelta,0,0,0);
+   NTL::LLL_QP(Mbasis,config.MLLLdelta,0,0,0);
 
    // Mbasis[0] is zero vector
    for( i = j; i <= l; i++ )
@@ -770,12 +772,21 @@ Lattice<BasisFloat, GSFloat>::merge(
    LatticeVector<BasisFloat> v;
    for( int i = 0; i < std::min(m, other.m); i++ )
    {
-      if( basis.row(i) != other.basis.row(i) )
+      if( basis.row(i) == other.basis.row(i) )
       {
-         v = other.basis.row(i);
-         insertMlll(v, 0, 0, m-1);
+         continue;
+      }
+      v = other.basis.row(i);
+      for( int k = 0; k < m; k++ )
+      {
+         if( projectedSqnorm(k, v) < B(k) )
+         {
+            insertMlll(v, 0, k, m-1);
+            break;
+         }
       }
    }
+
    if( B != preSqnorm )
       return true;
    else

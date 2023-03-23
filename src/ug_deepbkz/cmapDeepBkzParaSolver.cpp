@@ -97,6 +97,20 @@ public:
    }
 
 
+   double approxFactor(
+         double norm=-1
+         )
+   {
+      return L->approxFactor(norm);
+   }
+
+   double hermiteFactor(
+         double norm=-1
+         )
+   {
+      return L->hermiteFactor(norm);
+   }
+
    ///
    /// @brief synchronize DeepBKZTool::lattice.basis to LapTools::Lattice.basis
    ///
@@ -178,9 +192,9 @@ public:
       if( cmapLapParaSolver->isInterrupted() )
       {
          shouldAbort = true;
-         std::cout << "rank " << std::setw(5) << right << rank
-            << ": receive interrupt request from LoadCoordinator"
-            << std::endl;
+         // std::cout << "  rank " << std::setw(5) << right << rank
+         //    << ": receive interrupt request from LoadCoordinator"
+         //    << std::endl;
          return true;
       }
 
@@ -206,19 +220,19 @@ public:
             {
                if( std::abs(L->B(0) - receivedSubLattice.B(0)) < 1e-8 )
                {
-                  std::cout << "rank " << std::setw(5) << right << rank
+                  std::cout << "U rank " << std::setw(5) << right << rank
                      << ": norm update by merging global basis: "
                      << std::sqrt(L->B(0)) << std::endl;
                }
                else if( L->B(0) < receivedSubLattice.B(0) - 1e-8 )
                {
-                  std::cout << "rank " << std::setw(5) << right << rank
+                  std::cout << "* rank " << std::setw(5) << right << rank
                      << ": find shorter global vector while merging global basis: "
                      << std::sqrt(L->B(0)) << std::endl;
                }
                else
                {
-                  std::cerr << "rank " << std::setw(5) << right << rank
+                  std::cerr << "E rank " << std::setw(5) << right << rank
                      << ": ERROR!! merged global basis, but the shortest vector of global basis was not taken into the basis: "
                      << std::sqrt(L->B(0)) << std::endl;
                }
@@ -249,9 +263,9 @@ public:
          if( cmapLapParaSolver->isInterrupted() )
          {
             shouldAbort = true;
-            std::cout << "rank " << std::setw(5) << right << rank
-               << ": receive interrupt request from LoadCoordinator"
-               << std::endl;
+            // std::cout << "  rank " << std::setw(5) << right << rank
+            //    << ": receive interrupt request from LoadCoordinator"
+            //    << std::endl;
          }
       }
       return true;
@@ -409,10 +423,12 @@ CMapDeepBkzParaSolver::runExDeepBkz(
 
    // LLL reduction
    LapTools::Reduction<int, double> ntlObj{L, getRank(), getThreadId(), 0};
-   std::cout << "rank " << std::setw(5) << right << getRank() << ": NTL::LLL start" << std::endl;
+   std::cout << "  rank " << std::setw(5) << right << getRank() << ": NTL::LLL start" << std::endl;
    ret = ntlObj.lll();     if( !ret ){ postprocess(); return; }
-   std::cout << "rank " << std::setw(5) << right << getRank() << ": NTL::BKZ20 start" << std::endl;
+   std::cout << "  rank " << std::setw(5) << right << getRank() << ": NTL::BKZ20 start" << std::endl;
    ret = ntlObj.bkz(20);   if( !ret ){ postprocess(); return; }
+   // std::cout << "  rank " << std::setw(5) << right << getRank() << ": NTL::BKZ25 start" << std::endl;
+   // ret = ntlObj.bkz(25);   if( !ret ){ postprocess(); return; }
 
    // DeepLLL reduction
    CmapDeepBkz<int, double, double> lllObj{L, this, getRank(), getThreadId(), 0, false};
@@ -433,7 +449,7 @@ CMapDeepBkzParaSolver::runExDeepBkz(
    double alpha = 0.99;
    for( blocksize = startBlocksize; blocksize <= endBlocksize; blocksize += intervalBlocksize )
    {
-      if( blocksize > endBlocksize ){ break; }
+      if( blocksize > endBlocksize || isInterrupted() ){ break; }
       reductionObj.DeepBKZ(_start, _end, blocksize, alpha, gamma, abort, getRank());
    }
 

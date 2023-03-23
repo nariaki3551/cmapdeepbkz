@@ -215,6 +215,18 @@ CMapDeepBkzParaLoadCoordinator::processTagSolverState(
             << ",unupdate," << numOfUnupdateSolverState << ",nShared," << nShared << ",index," << index
             // << std::endl << receivedLattice->B.transpose()
             << std::endl;
+         if( index == 0 )
+         {
+            double norm = std::sqrt(receivedLattice->basis.row(0).squaredNorm());
+            std::cout
+               << std::endl
+               << "Norm = " << norm
+               << ", AF = " << receivedLattice->approxFactor(norm)
+               << ", RHF = " << receivedLattice->rootHermiteFactor(norm)
+               << ", Vec = [" << receivedLattice->basis.row(0) << "]"
+               << std::endl
+               << std::endl;
+         }
 
          // Eigen::VectorXd approxVector(n);
          // for( int i = 0; i < n; ++i )

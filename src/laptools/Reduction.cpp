@@ -70,14 +70,15 @@ Reduction<BasisFloat, GSFloat>::lll(
 template<typename BasisFloat, typename GSFloat>
 bool
 Reduction<BasisFloat, GSFloat>::bkz(
-      int beta
+      int beta,
+      long prune
       )
 {
    NTL::mat_ZZ Mbasis = L->toNLTMat();
    if( std::is_same<GSFloat, double>() )
-      NTL::BKZ_FP(Mbasis, delta, beta, 0, 0, verbose);
+      NTL::BKZ_FP(Mbasis, delta, beta, prune, 0, verbose);
    else
-      NTL::BKZ_QP(Mbasis, delta, beta, 0, 0, verbose);
+      NTL::BKZ_QP(Mbasis, delta, beta, prune, 0, verbose);
    L->fromNLTMat(Mbasis);
    return true;
 }

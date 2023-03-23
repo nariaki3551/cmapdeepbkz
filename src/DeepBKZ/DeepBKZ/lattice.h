@@ -64,6 +64,8 @@ public:
    virtual bool sendSolution(){ return true; }
    virtual bool communicate(bool& shouldAbort){ return true; }
    virtual bool communicateInTour(bool& shouldAbort){ return true; }
+   virtual double approxFactor(double norm=-1){ return -1.0; }
+   virtual double hermiteFactor(double norm=-1){ return -1.0; }
 
 	/* Constructor */
    lattice(){};
