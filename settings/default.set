@@ -32,7 +32,7 @@ WriteSizeShareDataPool = 100000
 # ------------------------------------------
 #     Base ( Communication )
 # ------------------------------------------
-TimeLimit = 3600
+TimeLimit = 150000
 NoWaitNotificationId = FALSE
 LCTermTimeUpdateNotificationInterval = 300
 LCUpperIdleRatio = 0.9
@@ -41,6 +41,7 @@ NotificationInterval = 1
 IReceiveInterval     = 1
 ShareVectorsInterval = 1
 CMapLapParamFilePath = "./settings/laptools.ug.param"
+LowerBoundOfApproxFactor = 1.02
 
 # ------------------------------------------
 #     Base ( LC )
@@ -64,8 +65,8 @@ LocalTaskNVectorLowerBound = 2
 # ------------------------------------------
 # ReductionType; 1 no-communication, 2 parallel 3 recursive
 DeepBkzReductionType = 2
-DeepBkzStartBlockSize = 30
-DeepBkzEndBlockSize = 30
+DeepBkzStartBlockSize = 50
+DeepBkzEndBlockSize = 80
 DeepBkzBlockSizeInterval = 5
 RandomizeRows = -1
 DeepBkzNumOfSendVectorsToPool = 5
@@ -77,7 +78,6 @@ DeepBkzNumOfReceiveVectorsFromPool = 1
 EnumPruningParameter = 1e-10
 EnumSamplingDepth = 3
 EnumNumOfSendVectorsToPool = 1
-
 
 # ------------------------------------------
 #     Sieve
