@@ -41,7 +41,7 @@ NotificationInterval = 1
 IReceiveInterval     = 1
 ShareVectorsInterval = 1
 CMapLapParamFilePath = "./settings/laptools.ug.param"
-LowerBoundOfApproxFactor = 1.02
+LowerBoundOfApproxFactor = 1.2
 
 # ------------------------------------------
 #     Base ( LC )
