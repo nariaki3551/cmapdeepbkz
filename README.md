@@ -42,21 +42,21 @@ If you do not use docker, you have to install third-party libraries as follows.
 **Note** We have checked our framework and sovlers with CMake(v3.22.2), NTL(v11.5.1), Eigen(v3.4.0) and Boost(v1.75).
 The commands to install these libraries are as follows.
 ```bash
-# install cmake (version 3.22.3)
+# install cmake (version 3.22.3) if necessary
 wget https://github.com/Kitware/CMake/releases/download/v3.22.3/cmake-3.22.3.tar.gz
 tar -xf cmake-3.22.3.tar.gz
 cd cmake-3.22.3
 ./bootstrap [--prefix=PREFIX] [--parallel=PARALLEL]
 make & make install
 
-# install NTL (version 11.5.1)
+# install NTL (version 11.5.1) if necessary
 wget https://libntl.org/ntl-11.5.1.tar.gz
 tar -xf ntl-11.5.1.tar.gz
 cd ntl-11.5.1/src
 ./configure [PREFIX=PREFIX]
 make & make install
 
-# install Eigen (version 3.4.0)
+# install Eigen (version 3.4.0) if necessary
 wget https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz
 tar -xf eigen-3.4.0.tar.gz
 cd eigen-3.4.0
@@ -77,7 +77,7 @@ In the case that you install these libraries in your local, it is recommended to
 
 # Compiling
 
-The binaries will be created in `DeepBKZ/bin`.
+The binaries will be created in `cmapdeepbkz/bin`.
 
 ```bash
 mkdir build
