@@ -51,7 +51,7 @@ NumOfInitialEnumSolvers    = 0
 NumOfInitialSieveSolvers   = 0
 ShareDataPoolSize = 1000000
 InstancePoolSize = 100
-DimensionOfSharedLattice = 16
+DimensionOfSharedLattice = 18
 ShareIncumbentVector = TRUE
 
 # ------------------------------------------
@@ -67,7 +67,7 @@ LocalTaskNVectorLowerBound = 2
 DeepBkzReductionType = 2
 DeepBkzStartBlockSize = 50
 DeepBkzEndBlockSize = 80
-DeepBkzBlockSizeInterval = 5
+DeepBkzBlockSizeInterval = 10
 RandomizeRows = -1
 DeepBkzNumOfSendVectorsToPool = 5
 DeepBkzNumOfReceiveVectorsFromPool = 1
