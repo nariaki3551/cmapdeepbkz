@@ -390,6 +390,8 @@ CMapLapParaTaskMpi::bcast(
       )
 {
    UG::ParaCommMpi *commMpi = dynamic_cast< UG::ParaCommMpi* >(comm);
+   nRows = getBasis()->rows();
+   nCols = getBasis()->cols();
 
    if( iSolverType == static_cast<int>(Undefined) )
    {
@@ -598,6 +600,8 @@ CMapLapParaTaskMpi::send(
       )
 {
    CMapLapParaCommMpi *commMpi = dynamic_cast< CMapLapParaCommMpi* >(comm);
+   nRows = getBasis()->rows();
+   nCols = getBasis()->cols();
 
    iSolverType = static_cast<int>(solverType);
 

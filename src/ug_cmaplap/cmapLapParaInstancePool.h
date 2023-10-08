@@ -481,15 +481,13 @@ public:
          gzstream::igzstream &in
          )
    {
-      int n = 1;  // It has an instance added in constructer of LoadCoordinator
       auto basisElement = std::make_shared<BasisElement>();
       while( basisElement->read(comm,in) )
       {
-         if( insert(basisElement) ){ n++; }
+         insert(basisElement);
          basisElement = std::make_shared<BasisElement>();
       }
-      assert( n == static_cast<int>(size()) );
-      return n;
+      return size();
    }
 #endif
 
